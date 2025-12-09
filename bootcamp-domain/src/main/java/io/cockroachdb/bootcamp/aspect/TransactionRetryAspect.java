@@ -1,7 +1,6 @@
 package io.cockroachdb.bootcamp.aspect;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.time.Duration;
 import java.time.Instant;
@@ -17,7 +16,6 @@ import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.resilience.annotation.Retryable;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * AOP aspect that automatically retries operations that throw transient SQL exceptions
@@ -54,7 +52,7 @@ public class TransactionRetryAspect {
      * The precedence at which this advice is ordered by which also controls
      * the order it is invoked in the call chain between a source and target.
      */
-    public static final int PRECEDENCE = AdvisorOrder.TRANSACTION_RETRY_ADVISOR;
+    public static final int PRECEDENCE = AdvisorOrder.TRANSACTION_BEFORE_ADVISOR;
 
     public static final String RETRY_ASPECT_CALL_COUNT = "TransactionRetryAspect.retryAttempt";
 

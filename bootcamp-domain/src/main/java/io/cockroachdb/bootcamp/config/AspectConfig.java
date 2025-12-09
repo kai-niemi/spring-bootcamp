@@ -2,13 +2,16 @@ package io.cockroachdb.bootcamp.config;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Role;
 
+import io.cockroachdb.bootcamp.aspect.IdempotencyAspect;
 import io.cockroachdb.bootcamp.aspect.TransactionAttributeAspect;
+import io.cockroachdb.bootcamp.repository.IdempotencyTokenRepository;
 
 @Configuration
 @EnableAspectJAutoProxy(proxyTargetClass = true)
@@ -17,5 +20,10 @@ public class AspectConfig {
     @Bean
     public TransactionAttributeAspect transactionDecoratorAspect(DataSource dataSource) {
         return new TransactionAttributeAspect(dataSource);
+    }
+
+    @Bean
+    public IdempotencyAspect idempotencyAspect(@Autowired IdempotencyTokenRepository repository) {
+        return new IdempotencyAspect(repository);
     }
 }

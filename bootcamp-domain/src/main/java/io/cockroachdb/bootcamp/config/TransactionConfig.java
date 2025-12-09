@@ -10,7 +10,7 @@ import io.cockroachdb.bootcamp.aspect.AdvisorOrder;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "io.cockroachdb.bootcamp", enableDefaultTransactions = false)
-@EnableTransactionManagement(proxyTargetClass = true, order = AdvisorOrder.TRANSACTION_MANAGER_ADVISOR)
+@EnableTransactionManagement(proxyTargetClass = true, order = AdvisorOrder.TRANSACTION_BOUNDARY_ADVISOR)
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class TransactionConfig {
 }

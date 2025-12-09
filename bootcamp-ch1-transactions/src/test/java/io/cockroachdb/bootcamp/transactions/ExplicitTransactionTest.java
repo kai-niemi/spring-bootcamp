@@ -29,7 +29,8 @@ public class ExplicitTransactionTest extends AbstractIntegrationTest {
         sampleDataService.withRandomCustomersAndProducts(
                 10, 5, (customers, products) -> {
                     IntStream.rangeClosed(1, 10).forEach(x -> {
-                        PurchaseOrder.Builder orderBuilder = PurchaseOrder.builder()
+                        PurchaseOrder.Builder orderBuilder = PurchaseOrder
+                                .builder()
                                 .withCustomer(RandomData.selectRandom(customers));
 
                         products.forEach(product ->

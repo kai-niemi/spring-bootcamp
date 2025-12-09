@@ -10,13 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import io.cockroachdb.bootcamp.Chapter4Application;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
-import io.cockroachdb.bootcamp.patterns.outbox.OrderService;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 
 @SpringBootTest(classes = {Chapter4Application.class})
 public class OutboxPatternTest extends AbstractIntegrationTest {
     @Autowired
-    @Qualifier("outboxOrderService")
     private OrderService orderService;
 
     @Order(1)

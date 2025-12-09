@@ -22,6 +22,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
+import io.cockroachdb.bootcamp.annotation.Idempotent;
 import io.cockroachdb.bootcamp.annotation.ServiceFacade;
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.annotation.TransactionImplicit;
@@ -104,8 +105,9 @@ public class OrderServiceFacade implements OrderService {
         return orderRepository.findAllOrderDetails();
     }
 
-    @TransactionExplicit
     @Override
+    @TransactionExplicit
+    @Idempotent
     public PurchaseOrder placeOrder(PurchaseOrder order) throws BusinessException {
         AssertUtils.assertReadWriteTransaction();
 

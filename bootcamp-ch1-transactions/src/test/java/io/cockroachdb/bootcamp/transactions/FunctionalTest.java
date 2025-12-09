@@ -46,7 +46,7 @@ public class FunctionalTest extends AbstractIntegrationTest {
 
     @Order(1)
     @Test
-    public void whenPlaceOneOrder_thenExpectSuccess() {
+    public void whenPlaceOrder_thenExpectSuccess() {
         Page<Product> productPage = orderService.findProducts(PageRequest.ofSize(10));
         Page<Customer> customerPage = orderService.findCustomers(PageRequest.ofSize(10));
 
@@ -65,10 +65,41 @@ public class FunctionalTest extends AbstractIntegrationTest {
                 .then()
                 .build();
 
-        this.purchaseOrderId = orderService.placeOrder(purchaseOrder).getId();
+        PurchaseOrder result = orderService.placeOrder(purchaseOrder);
+
+        Assertions.assertNotNull(result, "Expected detached entity");
+
+        this.purchaseOrderId = result.getId();
     }
 
     @Order(2)
+    @Test
+    public void whenPlaceOrderAgain_thenExpectDeDuplication() {
+        Page<Product> productPage = orderService.findProducts(PageRequest.ofSize(10));
+        Page<Customer> customerPage = orderService.findCustomers(PageRequest.ofSize(10));
+
+        Assertions.assertFalse(customerPage.isEmpty(), "No customers");
+        Assertions.assertFalse(productPage.isEmpty(), "No products");
+
+        Product product = productPage.getContent().getFirst();
+
+        PurchaseOrder purchaseOrder = PurchaseOrder.builder()
+                .withId(purchaseOrderId)
+                .withCustomer(customerPage.getContent().getFirst())
+                .andOrderItem()
+                .withProductId(product.getId())
+                .withProductSku(product.getSku())
+                .withUnitPrice(product.getPrice())
+                .withQuantity(1)
+                .then()
+                .build();
+
+        PurchaseOrder result = orderService.placeOrder(purchaseOrder);
+
+        Assertions.assertNull(result, "Expected de-duplication");
+    }
+
+    @Order(3)
     @Test
     public void whenReadingOrder_thenExpectStatusUpdated() {
         Page<PurchaseOrder> orderPage = orderService.findOrders(PageRequest.ofSize(10));
@@ -78,7 +109,7 @@ public class FunctionalTest extends AbstractIntegrationTest {
         Assertions.assertEquals(ShipmentStatus.placed, purchaseOrder.getStatus());
     }
 
-    @Order(3)
+    @Order(4)
     @Test
     public void whenReadingOrderLineProduct_thenExpectInventoryUpdated() {
         PurchaseOrder purchaseOrder = orderService.findOrderDetailById(purchaseOrderId).orElseThrow();
@@ -95,7 +126,7 @@ public class FunctionalTest extends AbstractIntegrationTest {
         Assertions.assertEquals(0, product.getInventory());
     }
 
-    @Order(4)
+    @Order(5)
     @Test
     public void givenZeroInventory_whenPlaceOneOrder_thenExpectFailure() {
         Page<Product> productPage = orderService.findProducts(PageRequest.ofSize(10));
@@ -122,7 +153,7 @@ public class FunctionalTest extends AbstractIntegrationTest {
         Assertions.assertInstanceOf(DataIntegrityViolationException.class, ex.getCause());
     }
 
-    @Order(5)
+    @Order(6)
     @Test
     public void givenOrderStatusPlaced_whenUpdatingToConfirmed_thenExpectNewStatus() {
         orderService.updateOrder(purchaseOrderId, ShipmentStatus.placed, ShipmentStatus.confirmed,
@@ -132,7 +163,7 @@ public class FunctionalTest extends AbstractIntegrationTest {
         Assertions.assertEquals(ShipmentStatus.confirmed, purchaseOrder.getStatus());
     }
 
-    @Order(6)
+    @Order(7)
     @Test
     public void givenOrderStatusConfirmed_whenUpdatingToDelivered_thenExpectNewStatus() {
         orderService.updateOrder(purchaseOrderId, ShipmentStatus.confirmed, ShipmentStatus.delivered,
@@ -142,7 +173,7 @@ public class FunctionalTest extends AbstractIntegrationTest {
         Assertions.assertEquals(ShipmentStatus.delivered, purchaseOrder.getStatus());
     }
 
-    @Order(7)
+    @Order(8)
     @Test
     public void givenQueryTransformation_whenListingAllOrderDetails_thenExpectJoinHints() {
         orderService.findOrderDetails().forEach(this::print);

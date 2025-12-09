@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.patterns.outbox;
+package io.cockroachdb.bootcamp.patterns;
 
 import java.util.Objects;
 
@@ -8,19 +8,19 @@ import org.springframework.resilience.annotation.Retryable;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.cockroachdb.bootcamp.annotation.Idempotent;
 import io.cockroachdb.bootcamp.annotation.ServiceFacade;
 import io.cockroachdb.bootcamp.aspect.TransientExceptionClassifier;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 import io.cockroachdb.bootcamp.model.ShipmentStatus;
+import io.cockroachdb.bootcamp.patterns.outbox.OutboxOperation;
 import io.cockroachdb.bootcamp.repository.OrderRepository;
 import io.cockroachdb.bootcamp.repository.ProductRepository;
 import io.cockroachdb.bootcamp.util.AssertUtils;
-import io.cockroachdb.bootcamp.patterns.BusinessException;
 
 @ServiceFacade
-@Transactional(propagation = Propagation.REQUIRES_NEW)
-public class OutboxOrderService implements OrderService {
+public class DefaultOrderService implements OrderService {
     @Autowired
     private ProductRepository productRepository;
 
@@ -34,6 +34,7 @@ public class OutboxOrderService implements OrderService {
             maxDelay = 15_0000,
             multiplier = 1.5)
     @OutboxOperation(aggregateType = "purchase_order")
+    @Idempotent
     public PurchaseOrder placeOrder(PurchaseOrder order) throws BusinessException {
         AssertUtils.assertReadWriteTransaction();
 

@@ -32,7 +32,7 @@ public class InboxJdbcRepository implements InboxRepository {
     public void writeEvent(Object event, String aggregateType) {
         String json = jsonMapper.writer().writeValueAsString(event);
 
-        logger.info("Writing inbox event: {}", json);
+        logger.debug("Writing inbox event: {}", json);
 
         jdbcTemplate.update(
                 "UPSERT INTO inbox (aggregate_type,payload) VALUES (?,?)",

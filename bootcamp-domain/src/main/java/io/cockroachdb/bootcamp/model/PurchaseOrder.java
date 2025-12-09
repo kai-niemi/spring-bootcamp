@@ -15,55 +15,10 @@ import jakarta.persistence.*;
         query = "select po from PurchaseOrder po where po.id=:id")
 @NamedQuery(name = "updateOrderStatusById",
         query = "update PurchaseOrder po set po.status=:postStatus where po.id=:id and po.status=:preStatus")
-public class PurchaseOrder extends AbstractEntity<UUID> {
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static final class Builder {
-        private UUID id;
-
-        private Customer customer;
-
-        private final List<PurchaseOrderItem> orderItems = new ArrayList<>();
-
-        private Builder() {
-        }
-
-        public Builder withGeneratedId() {
-            this.id = UUID.randomUUID();
-            return this;
-        }
-
-        public Builder withCustomer(Customer customer) {
-            this.customer = customer;
-            return this;
-        }
-
-        public PurchaseOrderItem.NestedBuilder andOrderItem() {
-            return new PurchaseOrderItem.NestedBuilder(this, orderItems::add);
-        }
-
-        public PurchaseOrder build() {
-            if (this.customer == null) {
-                throw new IllegalStateException("Missing customer");
-            }
-            if (this.orderItems.isEmpty()) {
-                throw new IllegalStateException("Empty order");
-            }
-
-            PurchaseOrder order = new PurchaseOrder();
-            order.id = id;
-            order.customer = this.customer;
-            order.deliveryAddress = customer.getAddress();
-            order.orderItems.addAll(this.orderItems);
-
-            return order;
-        }
-    }
-
+public class PurchaseOrder extends AbstractEntity<UUID> implements IdempotencyKeyHolder {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     @Column(name = "total_price", nullable = false, updatable = false)
@@ -73,9 +28,6 @@ public class PurchaseOrder extends AbstractEntity<UUID> {
     @JoinColumn(name = "customer_id", nullable = false, updatable = false)
     private Customer customer;
 
-    //    @ElementCollection(fetch = FetchType.EAGER) // always cascades
-//    @CollectionTable(name = "purchase_order_item", joinColumns = @JoinColumn(name = "order_id"))
-//    @OrderColumn(name = "item_pos")
     @ElementCollection(fetch = FetchType.LAZY)
     @JoinTable(name = "purchase_order_item", joinColumns = @JoinColumn(name = "order_id"))
     @OrderColumn(name = "item_pos")
@@ -121,6 +73,11 @@ public class PurchaseOrder extends AbstractEntity<UUID> {
         if (dateUpdated == null) {
             dateUpdated = LocalDateTime.now();
         }
+    }
+
+    @Override
+    public UUID resolveKey() {
+        return id;
     }
 
     public void setStatus(ShipmentStatus status) {
@@ -183,5 +140,56 @@ public class PurchaseOrder extends AbstractEntity<UUID> {
                ", dateUpdated=" + dateUpdated +
                ", deliveryAddress=" + deliveryAddress +
                '}';
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private UUID id;
+
+        private Customer customer;
+
+        private final List<PurchaseOrderItem> orderItems = new ArrayList<>();
+
+        private Builder() {
+        }
+
+        public Builder withGeneratedId() {
+            this.id = UUID.randomUUID();
+            return this;
+        }
+
+        public Builder withId(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withCustomer(Customer customer) {
+            this.customer = customer;
+            return this;
+        }
+
+        public PurchaseOrderItem.NestedBuilder andOrderItem() {
+            return new PurchaseOrderItem.NestedBuilder(this, orderItems::add);
+        }
+
+        public PurchaseOrder build() {
+            if (this.customer == null) {
+                throw new IllegalStateException("Missing customer");
+            }
+            if (this.orderItems.isEmpty()) {
+                throw new IllegalStateException("Empty order");
+            }
+
+            PurchaseOrder order = new PurchaseOrder();
+            order.id = id;
+            order.customer = this.customer;
+            order.deliveryAddress = customer.getAddress();
+            order.orderItems.addAll(this.orderItems);
+
+            return order;
+        }
     }
 }

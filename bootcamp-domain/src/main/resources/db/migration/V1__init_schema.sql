@@ -25,7 +25,13 @@ create table if not exists product
     primary key (id)
 );
 
-create type if not exists shipment_status as enum ('placed', 'confirmed', 'cancelled','delivered');
+create type if not exists shipment_status as enum
+(
+    'placed',
+    'confirmed',
+    'cancelled',
+    'delivered'
+);
 
 -- Not supported
 -- create cast (varchar as shipment_status) with inout as implicit;
@@ -67,19 +73,32 @@ alter table product
 
 alter table if exists purchase_order_item
     add constraint if not exists fk_order_item_ref_product
-        foreign key (product_id)
-            references product;
+    foreign key (product_id)
+    references product;
 
 alter table if exists purchase_order_item
     add constraint if not exists fk_order_item_ref_order
-        foreign key (order_id)
-            references purchase_order;
+    foreign key (order_id)
+    references purchase_order;
 
 alter table if exists purchase_order
     add constraint if not exists fk_order_ref_customer
-        foreign key (customer_id)
-            references customer;
+    foreign key (customer_id)
+    references customer;
 
 -- Foreign key indexes
 create index fk_order_item_ref_product_idx on purchase_order_item (product_id);
 create index fk_order_ref_customer_idx on purchase_order (customer_id);
+
+-- Idempotency keys
+
+create table if not exists idempotency_token
+(
+    id         uuid primary key not null,
+    created_at timestamptz      not null default clock_timestamp()
+);
+
+alter table idempotency_token set(
+    ttl='on',
+    ttl_expire_after = '24 hours',
+    ttl_job_cron='@daily');

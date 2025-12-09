@@ -30,7 +30,6 @@ public class InboxPatternTest extends AbstractIntegrationTest {
                     Product product = products.getFirst();
 
                     PurchaseOrder purchaseOrder = PurchaseOrder.builder()
-                            .withGeneratedId()
                             .withCustomer(customers.getFirst())
                             .andOrderItem()
                             .withProductId(product.getId())
@@ -40,7 +39,7 @@ public class InboxPatternTest extends AbstractIntegrationTest {
                             .then()
                             .build();
 
-                    return inboxService.placeOrder(purchaseOrder);
+                    return inboxService.submitPurchaseOrder(purchaseOrder);
                 });
     }
 }

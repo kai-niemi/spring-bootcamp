@@ -10,7 +10,7 @@ import io.cockroachdb.bootcamp.aspect.AdvisorOrder;
 import io.cockroachdb.bootcamp.aspect.TransientExceptionClassifier;
 
 @Configuration
-@EnableResilientMethods(proxyTargetClass = true, order = AdvisorOrder.TRANSACTION_RETRY_ADVISOR)
+@EnableResilientMethods(proxyTargetClass = true, order = AdvisorOrder.TRANSACTION_BEFORE_ADVISOR)
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class SpringRetryConfig {
     @Bean

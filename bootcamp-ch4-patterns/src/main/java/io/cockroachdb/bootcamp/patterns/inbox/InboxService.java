@@ -13,7 +13,7 @@ public class InboxService {
     private InboxRepository inboxRepository;
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public PurchaseOrder placeOrder(PurchaseOrder order) {
+    public PurchaseOrder submitPurchaseOrder(PurchaseOrder order) {
         inboxRepository.writeEvent(order, "purchase_order");
         return order;
     }

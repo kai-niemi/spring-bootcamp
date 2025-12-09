@@ -14,7 +14,7 @@ import io.cockroachdb.bootcamp.aspect.AdvisorOrder;
 @Aspect
 @Order(OutboxAspect.PRECEDENCE)
 public class OutboxAspect {
-    public static final int PRECEDENCE = AdvisorOrder.CHANGE_FEED_ADVISOR;
+    public static final int PRECEDENCE = AdvisorOrder.TRANSACTION_AFTER_ADVISOR;
 
     private final OutboxRepository outboxRepository;
 

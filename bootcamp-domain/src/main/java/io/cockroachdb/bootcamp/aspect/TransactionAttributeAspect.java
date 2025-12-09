@@ -43,7 +43,7 @@ public class TransactionAttributeAspect {
      * The precedence at which this advice is ordered by which also controls
      * the order it is invoked in the call chain between a source and target.
      */
-    public static final int PRECEDENCE = AdvisorOrder.TRANSACTION_ATTRIBUTES_ADVISOR;
+    public static final int PRECEDENCE = AdvisorOrder.TRANSACTION_CONTEXT_ADVISOR;
 
     private final JdbcTemplate jdbcTemplate;
 
