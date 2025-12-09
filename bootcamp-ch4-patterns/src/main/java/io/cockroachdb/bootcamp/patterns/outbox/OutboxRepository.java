@@ -1,5 +1,7 @@
 package io.cockroachdb.bootcamp.patterns.outbox;
 
+import org.springframework.data.domain.Persistable;
+
 public interface OutboxRepository {
-    void writeEvent(Object event, String aggregateType);
+    void writeAggregate(Persistable<?> event, String aggregateType);
 }

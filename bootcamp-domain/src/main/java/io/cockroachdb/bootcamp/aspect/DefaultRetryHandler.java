@@ -30,7 +30,7 @@ public class DefaultRetryHandler implements RetryHandler {
             // Check for idempotent signal
             Idempotent idempotent = TransactionRetryAspect.findAnnotation(signature, Idempotent.class);
             if (idempotent != null) {
-                return Arrays.stream(idempotent.sqlCodes())
+                return Arrays.stream(idempotent.transientSQLStates())
                         .collect(Collectors.toSet()).contains(sqlException.getSQLState());
             }
         }

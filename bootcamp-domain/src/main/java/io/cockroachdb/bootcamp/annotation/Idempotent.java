@@ -18,5 +18,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface Idempotent {
-    String[] sqlCodes() default {"08001", "08003", "08004", "08006", "08007", "08S01", "57P01"};
+    String[] transientSQLStates() default {
+            "08001", "08003", "08004", "08006", "08007", "08S01", "57P01"
+    };
 }

@@ -171,6 +171,11 @@ public class PurchaseOrder extends AbstractEntity<UUID> implements IdempotencyKe
             return this;
         }
 
+        public Builder andOrderItems(List<PurchaseOrderItem> items) {
+            this.orderItems.addAll(items);
+            return this;
+        }
+
         public PurchaseOrderItem.NestedBuilder andOrderItem() {
             return new PurchaseOrderItem.NestedBuilder(this, orderItems::add);
         }

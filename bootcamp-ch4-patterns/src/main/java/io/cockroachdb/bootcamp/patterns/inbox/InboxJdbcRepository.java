@@ -11,8 +11,10 @@ import org.springframework.stereotype.Repository;
 import jakarta.annotation.PostConstruct;
 import tools.jackson.databind.json.JsonMapper;
 
+import io.cockroachdb.bootcamp.model.PurchaseOrder;
+
 @Repository
-public class InboxJdbcRepository implements InboxRepository {
+public class InboxJdbcRepository implements InboxRepository<PurchaseOrder> {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -29,13 +31,13 @@ public class InboxJdbcRepository implements InboxRepository {
     }
 
     @Override
-    public void writeEvent(Object event, String aggregateType) {
-        String json = jsonMapper.writer().writeValueAsString(event);
+    public void writeAggregate(PurchaseOrder purchaseOrder, String aggregateType) {
+        String json = jsonMapper.writer().writeValueAsString(purchaseOrder);
 
-        logger.debug("Writing inbox event: {}", json);
+        logger.debug("Write inbox event: {}", json);
 
         jdbcTemplate.update(
-                "UPSERT INTO inbox (aggregate_type,payload) VALUES (?,?)",
+                "INSERT INTO inbox (aggregate_type,payload) VALUES (?, ?) RETURNING NOTHING",
                 ps -> {
                     ps.setString(1, aggregateType);
                     ps.setObject(2, json);

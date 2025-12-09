@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Persistable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -12,6 +13,8 @@ import org.springframework.util.Assert;
 
 import jakarta.annotation.PostConstruct;
 import tools.jackson.databind.json.JsonMapper;
+
+import io.cockroachdb.bootcamp.model.PurchaseOrder;
 
 @Repository
 public class OutboxJdbcRepository implements OutboxRepository {
@@ -31,7 +34,7 @@ public class OutboxJdbcRepository implements OutboxRepository {
     }
 
     @Override
-    public void writeEvent(Object event, String aggregateType) {
+    public void writeAggregate(Persistable<?> event, String aggregateType) {
         Assert.isTrue(TransactionSynchronizationManager.isActualTransactionActive(),
                 "Expected existing transaction - check advisor @Order");
 

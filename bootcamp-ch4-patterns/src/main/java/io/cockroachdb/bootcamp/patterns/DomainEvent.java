@@ -1,25 +1,19 @@
-package io.cockroachdb.bootcamp.patterns.outbox;
+package io.cockroachdb.bootcamp.patterns;
 
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import tools.jackson.databind.annotation.JsonDeserialize;
-import tools.jackson.databind.annotation.JsonSerialize;
-import tools.jackson.databind.deser.jdk.UUIDDeserializer;
-import tools.jackson.databind.ser.jdk.UUIDSerializer;
-
 /**
- * A generic outbox event wrapper for CockroachDB CDC queries with 'bare' envelopes.
+ * A generic inbox/outbox domain event wrapper for CockroachDB CDC
+ * queries with 'bare' envelopes.
  *
  * @param <T> the payload generic type (json serde)
  */
-public abstract class OutboxEvent<T> {
+public abstract class DomainEvent<T> {
     // Correlates with the Kafka event key.
     // Projection into payload 'id' attribute.
     @JsonProperty("aggregate_id")
-    @JsonSerialize(using = UUIDSerializer.class)
-    @JsonDeserialize(using = UUIDDeserializer.class)
     private UUID aggregateId;
 
     // When using diff change feeds, provides the CRUD operation type
@@ -28,7 +22,7 @@ public abstract class OutboxEvent<T> {
 
     protected T payload;
 
-    protected OutboxEvent() {
+    protected DomainEvent() {
     }
 
     public UUID getAggregateId() {
@@ -49,7 +43,7 @@ public abstract class OutboxEvent<T> {
 
     @Override
     public String toString() {
-        return "OutboxEvent{" +
+        return "DomainEvent{" +
                "eventType=" + eventType +
                ", id=" + aggregateId +
                ", payload=" + payload +

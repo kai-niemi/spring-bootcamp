@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.patterns.config;
+package io.cockroachdb.bootcamp.patterns;
 
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;

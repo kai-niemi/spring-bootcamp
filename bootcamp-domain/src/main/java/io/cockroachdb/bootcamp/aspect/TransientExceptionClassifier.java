@@ -44,7 +44,7 @@ public class TransientExceptionClassifier implements MethodRetryPredicate {
                 // Check for idempotent signal
                 Idempotent idempotent = AnnotationUtils.findAnnotation(method, Idempotent.class);
                 if (idempotent != null) {
-                    transientError = Arrays.stream(idempotent.sqlCodes())
+                    transientError = Arrays.stream(idempotent.transientSQLStates())
                             .collect(Collectors.toSet()).contains(sqlException.getSQLState());
                 }
             }

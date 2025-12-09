@@ -1,6 +1,7 @@
 package io.cockroachdb.bootcamp.patterns;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,7 +15,7 @@ import io.cockroachdb.bootcamp.aspect.TransientExceptionClassifier;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 import io.cockroachdb.bootcamp.model.ShipmentStatus;
-import io.cockroachdb.bootcamp.patterns.outbox.OutboxOperation;
+import io.cockroachdb.bootcamp.patterns.outbox.Outbox;
 import io.cockroachdb.bootcamp.repository.OrderRepository;
 import io.cockroachdb.bootcamp.repository.ProductRepository;
 import io.cockroachdb.bootcamp.util.AssertUtils;
@@ -33,9 +34,9 @@ public class DefaultOrderService implements OrderService {
             maxRetries = 5,
             maxDelay = 15_0000,
             multiplier = 1.5)
-    @OutboxOperation(aggregateType = "purchase_order")
+    @Outbox(aggregateClass = PurchaseOrder.class, aggregateType = "purchase_order")
     @Idempotent
-    public PurchaseOrder placeOrder(PurchaseOrder order) throws BusinessException {
+    public PurchaseOrder placeOrder(UUID idempotencyKey, PurchaseOrder order) throws BusinessException {
         AssertUtils.assertReadWriteTransaction();
 
         try {

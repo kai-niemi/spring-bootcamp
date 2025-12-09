@@ -1,10 +1,11 @@
 package io.cockroachdb.bootcamp.patterns;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import io.cockroachdb.bootcamp.Chapter4Application;
@@ -39,7 +40,7 @@ public class OutboxPatternTest extends AbstractIntegrationTest {
                             .then()
                             .build();
 
-                    return orderService.placeOrder(purchaseOrder);
+                    return orderService.placeOrder(UUID.randomUUID(), purchaseOrder);
                 });
         Assertions.assertNotNull(po.getId());
     }

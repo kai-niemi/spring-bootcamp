@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.patterns.outbox;
+package io.cockroachdb.bootcamp.patterns;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

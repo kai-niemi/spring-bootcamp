@@ -25,17 +25,19 @@ public class OutboxAspect {
     /**
      * Pointcut expression matching all outbox event operations.
      */
-    @Pointcut("execution(public * *(..)) && @annotation(outboxPayload)")
-    public void anyOutboxEventOperation(OutboxOperation outboxPayload) {
+    @Pointcut("execution(public * *(..)) && @annotation(outbox)")
+    public void anyOutboxOperation(Outbox outbox) {
     }
 
-    @AfterReturning(pointcut = "anyOutboxEventOperation(outboxOperation)",
-            returning = "returnValue", argNames = "returnValue,outboxOperation")
-    public void doAfterOutboxOperation(Object returnValue, OutboxOperation outboxOperation) {
+    @AfterReturning(pointcut = "anyOutboxOperation(outbox)",
+            returning = "returnValue", argNames = "returnValue,outbox")
+    public void doAfterOutboxOperation(Object returnValue, Outbox outbox) {
         Assert.isTrue(TransactionSynchronizationManager.isActualTransactionActive(),
                 "Expected existing transaction - check advisor @Order");
 
-        outboxRepository.writeEvent(returnValue, outboxOperation.aggregateType());
+        outboxRepository.writeAggregate(
+                outbox.aggregateClass().cast(returnValue),
+                outbox.aggregateType());
     }
 }
 

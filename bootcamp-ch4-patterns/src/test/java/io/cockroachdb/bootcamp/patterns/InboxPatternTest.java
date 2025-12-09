@@ -9,13 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import io.cockroachdb.bootcamp.Chapter4Application;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
+import io.cockroachdb.bootcamp.patterns.inbox.InboxRepository;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
-import io.cockroachdb.bootcamp.patterns.inbox.InboxService;
 
 @SpringBootTest(classes = {Chapter4Application.class})
 public class InboxPatternTest extends AbstractIntegrationTest {
     @Autowired
-    private InboxService inboxService;
+    private InboxRepository<PurchaseOrder> inboxRepository;
 
     @Order(1)
     @Test
@@ -30,6 +30,7 @@ public class InboxPatternTest extends AbstractIntegrationTest {
                     Product product = products.getFirst();
 
                     PurchaseOrder purchaseOrder = PurchaseOrder.builder()
+                            .withGeneratedId()
                             .withCustomer(customers.getFirst())
                             .andOrderItem()
                             .withProductId(product.getId())
@@ -39,7 +40,9 @@ public class InboxPatternTest extends AbstractIntegrationTest {
                             .then()
                             .build();
 
-                    return inboxService.submitPurchaseOrder(purchaseOrder);
+                    inboxRepository.writeAggregate(purchaseOrder, "purchase_order");
+
+                    return purchaseOrder;
                 });
     }
 }
