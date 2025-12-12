@@ -1,34 +1,39 @@
 # Chapter 4 :: Patterns
 
-Module for demonstrating various design patterns, mainly the transactional outbox.
+Module for demonstrating various design patterns, mainly the transactional inbox and outbox.
 
 Key topics:
 
-- Outbox pattern via CDC
-- Inbox pattern via CDC
+- Inbox pattern via CDC to Kafka
+- Outbox pattern via CDC to Kafka
 
 ## Prerequisites
 
-Kafka is required to demonstrate CDC. You can either use a manged Kafka cluster or a
-local self-hosted setup. In the latter case, just follow the [quickstart](https://kafka.apache.org/quickstart) guidelines
+Kafka is required to demonstrate CockroachDB built-in CDC feature. You can either use a manged Kafka cluster 
+or a local self-hosted setup. In the latter case, just follow the [quickstart](https://kafka.apache.org/quickstart) guidelines
 to setup a vanilla Kafka instance.
-
-Depending on your network setup, you may need to edit the following in `config/server.properties`:
-
-    listeners=PLAINTEXT://..
-    advertised.listener=PLAINTEXT://
-
-Then start Kafka in daemon mode:
-
-    bin/kafka-server-start.sh -daemon config/server.properties
-
-To tail some topic, in this case `hello`:
-
-    bin/kafka-console-consumer.sh --topic hello --from-beginning --bootstrap-server localhost:9092 --property print.key=true
-
+      
 ## Running Tests
 
-This script will present a menu of available test:
+Ensure Kafka is up and running.
+
+Start the spring boot service:
+
+    ./run-service.sh
+
+This script will present a menu of available tests to trigger the workflows:
 
     ./run-test.sh
+
+Lastly, you can tail some of topics used:
+
+- orders-inbox
+- orders-outbox
+
+In Kafka home dir:
+
+```shell
+bin/kafka-console-consumer.sh --topic orders-inbox --from-beginning --bootstrap-server localhost:9092 --property print.key=true
+bin/kafka-console-consumer.sh --topic orders-outbox --from-beginning --bootstrap-server localhost:9092 --property print.key=true
+```
 

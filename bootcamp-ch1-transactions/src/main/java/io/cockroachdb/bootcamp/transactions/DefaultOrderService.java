@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.resilience.annotation.Retryable;
+import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
@@ -22,10 +23,9 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
-import io.cockroachdb.bootcamp.annotation.Idempotent;
-import io.cockroachdb.bootcamp.annotation.ServiceFacade;
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.annotation.TransactionImplicit;
+import io.cockroachdb.bootcamp.aspect.TransientExceptionClassifier;
 import io.cockroachdb.bootcamp.model.Customer;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
@@ -34,15 +34,10 @@ import io.cockroachdb.bootcamp.model.Simulation;
 import io.cockroachdb.bootcamp.repository.CustomerRepository;
 import io.cockroachdb.bootcamp.repository.OrderRepository;
 import io.cockroachdb.bootcamp.repository.ProductRepository;
-import io.cockroachdb.bootcamp.aspect.TransientExceptionClassifier;
 import io.cockroachdb.bootcamp.util.AssertUtils;
 
-/**
- * Business service facade for the order system. This service represents the
- * transaction boundary and gateway to all business functionality, such as order placement.
- */
-@ServiceFacade
-public class OrderServiceFacade implements OrderService {
+@Service
+public class DefaultOrderService implements OrderService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -107,7 +102,6 @@ public class OrderServiceFacade implements OrderService {
 
     @Override
     @TransactionExplicit
-    @Idempotent
     public PurchaseOrder placeOrder(PurchaseOrder order) throws BusinessException {
         AssertUtils.assertReadWriteTransaction();
 

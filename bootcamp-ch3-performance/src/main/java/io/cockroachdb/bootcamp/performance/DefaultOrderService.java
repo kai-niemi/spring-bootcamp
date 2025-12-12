@@ -12,13 +12,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.cockroachdb.bootcamp.annotation.ServiceFacade;
-import io.cockroachdb.bootcamp.annotation.TimeTravel;
-import io.cockroachdb.bootcamp.annotation.TimeTravelMode;
+import io.cockroachdb.bootcamp.annotation.FollowerRead;
+import io.cockroachdb.bootcamp.annotation.FollowerReadType;
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
+import io.cockroachdb.bootcamp.annotation.TransactionImplicit;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 import io.cockroachdb.bootcamp.model.PurchaseOrderItem;
@@ -33,9 +34,8 @@ import io.cockroachdb.bootcamp.util.StreamUtils;
  * transaction boundary and gateway to all business functionality such as order
  * placement.
  */
-@ServiceFacade
-@Transactional(propagation = Propagation.REQUIRES_NEW)
-public class OrderServiceFacade implements OrderService {
+@Service
+public class DefaultOrderService implements OrderService {
     @Autowired
     private ProductRepository productRepository;
 
@@ -53,20 +53,20 @@ public class OrderServiceFacade implements OrderService {
     }
 
     @Override
-    @TransactionExplicit(readOnly = true, timeTravel = @TimeTravel(mode = TimeTravelMode.FOLLOWER_READ))
+    @TransactionExplicit(readOnly = true)
+    @FollowerRead(type = FollowerReadType.EXACT_STALENESS_READ)
     public BigDecimal sumOrderTotalsHistoricalQuery() {
-        AssertUtils.assertReadOnlyTransaction();
         return orderRepository.sumOrderTotal(ShipmentStatus.placed);
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    @TransactionImplicit
     public BigDecimal sumOrderTotalsHistoricalNativeQuery() {
         return orderRepository.sumOrderTotalNativeQuery(ShipmentStatus.placed.name());
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @TransactionExplicit
     public void placeOrder(PurchaseOrder order) throws BusinessException {
         AssertUtils.assertReadWriteTransaction();
 
@@ -88,7 +88,7 @@ public class OrderServiceFacade implements OrderService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @TransactionImplicit
     public void placeOrders(Collection<PurchaseOrder> orders, int batchSize, Consumer<Integer> consumer) {
         AssertUtils.assertNoTransaction();
 
@@ -106,7 +106,7 @@ public class OrderServiceFacade implements OrderService {
      *
      * @param chunk a batch/chunk of orders to move atomically from transient to persistent state
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @TransactionExplicit
     public void placeOrderChunk(Collection<PurchaseOrder> chunk) {
         AssertUtils.assertReadWriteTransaction();
 

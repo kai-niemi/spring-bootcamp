@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.aspect;
+package io.cockroachdb.bootcamp.transactions.aspect;
 
 import java.lang.annotation.Annotation;
 import java.util.Objects;
@@ -14,11 +14,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
-import io.cockroachdb.bootcamp.annotation.TimeTravel;
-import io.cockroachdb.bootcamp.annotation.TimeTravelMode;
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.annotation.TransactionPriority;
-import io.cockroachdb.bootcamp.repository.MetadataUtils;
+import io.cockroachdb.bootcamp.aspect.AdvisorOrder;
 
 /**
  * AOP aspect that sets specific and arbitrary transaction/session variables.
@@ -47,12 +45,9 @@ public class TransactionAttributeAspect {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final boolean hasEnterpriseLicense;
-
     public TransactionAttributeAspect(DataSource dataSource) {
         Assert.notNull(dataSource, "dataSource is null");
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.hasEnterpriseLicense = MetadataUtils.hasEnterpriseLicense(dataSource);
     }
 
     @Around(value = "io.cockroachdb.bootcamp.aspect.Pointcuts.anyExplicitTransactionBoundary(transactionExplicit)",
@@ -64,7 +59,7 @@ public class TransactionAttributeAspect {
                 "Expecting active transaction - check advice @Order and @EnableTransactionManagement order: "
                 + pjp.getSignature().toShortString());
 
-        // Grab from type if needed (for non-annotated methods)
+        // Grab from type if needed (for type-level annotations)
         if (transactionExplicit == null) {
             transactionExplicit = findAnnotation(pjp, TransactionExplicit.class);
         }
@@ -75,9 +70,9 @@ public class TransactionAttributeAspect {
             jdbcTemplate.update("SET application_name=?", transactionExplicit.applicationName());
         }
 
-        if (!TransactionPriority.NORMAL.equals(transactionExplicit.retryPriority())) {
+        if (!TransactionPriority.NORMAL.equals(transactionExplicit.priority())) {
             jdbcTemplate.execute("SET TRANSACTION PRIORITY "
-                                 + transactionExplicit.retryPriority().name());
+                                 + transactionExplicit.priority().name());
         } else {
             if (TransactionSynchronizationManager.hasResource(TransactionRetryAspect.RETRY_ASPECT_CALL_COUNT)) {
                 Integer numCalls = (Integer) TransactionSynchronizationManager
@@ -96,16 +91,6 @@ public class TransactionAttributeAspect {
 
         if (transactionExplicit.readOnly()) {
             jdbcTemplate.execute("SET transaction_read_only=true");
-        }
-
-        if (hasEnterpriseLicense) {
-            TimeTravel timeTravel = transactionExplicit.timeTravel();
-            if (timeTravel.mode().equals(TimeTravelMode.FOLLOWER_READ)) {
-                jdbcTemplate.execute("SET TRANSACTION AS OF SYSTEM TIME follower_read_timestamp()");
-            } else if (timeTravel.mode().equals(TimeTravelMode.HISTORICAL_READ)) {
-                jdbcTemplate.update("SET TRANSACTION AS OF SYSTEM TIME INTERVAL '"
-                                    + timeTravel.interval() + "'");
-            }
         }
 
         return pjp.proceed();

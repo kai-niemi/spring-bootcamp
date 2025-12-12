@@ -35,14 +35,6 @@ public @interface TransactionExplicit {
     boolean readOnly() default false;
 
     /**
-     * (Optional) Indicates that the annotated class or method can read from a
-     * given timestamp in the past. Follower reads in CockroachDB
-     * represents a computed time interval sufficiently in the past
-     * for reads to be served by closest follower replica.
-     */
-    TimeTravel timeTravel() default @TimeTravel(mode = TimeTravelMode.DISABLED);
-
-    /**
      * Sets the 'idle_in_transaction_session_timeout' session variable.
      */
     String idleTimeout() default "0s";
@@ -57,7 +49,7 @@ public @interface TransactionExplicit {
      * Overrides the {@link #priority()}() attribute.
      * Only applies when using the @{@link TransactionExplicit} meta-annotation.
      */
-    TransactionPriority retryPriority() default TransactionPriority.NORMAL;
+    TransactionPriority retryPriority() default TransactionPriority.HIGH;
 
     /**
      * Sets the 'application_name' session variable.

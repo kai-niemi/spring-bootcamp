@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.aspect;
+package io.cockroachdb.bootcamp.transactions.aspect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.UndeclaredThrowableException;
@@ -16,6 +16,8 @@ import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.resilience.annotation.Retryable;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
+
+import io.cockroachdb.bootcamp.aspect.AdvisorOrder;
 
 /**
  * AOP aspect that automatically retries operations that throw transient SQL exceptions

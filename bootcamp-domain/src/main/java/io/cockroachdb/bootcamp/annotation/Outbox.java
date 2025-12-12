@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.patterns.outbox;
+package io.cockroachdb.bootcamp.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.patterns.outbox;
+package io.cockroachdb.bootcamp.patterns.aspect;
 
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
+import io.cockroachdb.bootcamp.annotation.Outbox;
 import io.cockroachdb.bootcamp.aspect.AdvisorOrder;
+import io.cockroachdb.bootcamp.patterns.outbox.OutboxRepository;
 
 @Component
 @Aspect

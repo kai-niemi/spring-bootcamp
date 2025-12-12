@@ -1,11 +1,10 @@
 #!/bin/bash
 
-#db_url="jdbc:postgresql://localhost:26257/bootcamp?sslmode=disable"
-#db_user=root
-#db_password=cockroach
+db_url="jdbc:postgresql://localhost:26257/bootcamp?sslmode=disable"
+db_user=root
+db_password=cockroach
 
-spring_profile="domain"
-#spring_profile="domain,verbose"
+spring_profile="default,verbose"
 
 ####################################
 # Do not edit past this line

@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.patterns;
+package io.cockroachdb.bootcamp.patterns.event;
 
 import java.util.UUID;
 

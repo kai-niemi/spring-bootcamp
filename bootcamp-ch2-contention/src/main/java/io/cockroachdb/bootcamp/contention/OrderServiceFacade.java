@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.ObjectRetrievalFailureException;
-import org.springframework.resilience.annotation.EnableResilientMethods;
 import org.springframework.resilience.annotation.Retryable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +21,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
-import io.cockroachdb.bootcamp.annotation.ServiceFacade;
+import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.aspect.TransientExceptionClassifier;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
@@ -36,8 +36,7 @@ import io.cockroachdb.bootcamp.util.AssertUtils;
  * transaction boundary and gateway to all business functionality such as order
  * placement.
  */
-@ServiceFacade
-@Transactional(propagation = Propagation.REQUIRES_NEW)
+@Service
 public class OrderServiceFacade implements OrderService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -51,7 +50,7 @@ public class OrderServiceFacade implements OrderService {
     private EntityManager em;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+    @TransactionExplicit(readOnly = true)
     public Optional<PurchaseOrder> findOrderById(UUID id) {
         AssertUtils.assertReadOnlyTransaction();
         return orderRepository.findById(id);
@@ -63,7 +62,7 @@ public class OrderServiceFacade implements OrderService {
      * @param order the order detail in detached state
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @TransactionExplicit
     public PurchaseOrder placeOrder(PurchaseOrder order) throws BusinessException {
         AssertUtils.assertReadWriteTransaction();
 
@@ -88,7 +87,7 @@ public class OrderServiceFacade implements OrderService {
 
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @TransactionExplicit
     @Retryable(predicate = TransientExceptionClassifier.class,
             maxRetries = 5,
             maxDelay = 15_0000,

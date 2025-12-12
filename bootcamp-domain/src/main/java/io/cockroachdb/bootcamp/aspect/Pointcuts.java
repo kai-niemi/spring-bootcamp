@@ -8,7 +8,6 @@ import io.cockroachdb.bootcamp.annotation.Idempotent;
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.annotation.TransactionImplicit;
 
-
 /**
  * Various domain-agnostic pointcut expression for retry/decoration aspects.
  *
@@ -35,13 +34,6 @@ public class Pointcuts {
      */
     @Pointcut("execution(public * *(..)) && @annotation(retryable)")
     public void anyRetryableOperation(Retryable retryable) {
-    }
-
-    /**
-     * Pointcut expression matching all idempotent operations.
-     */
-    @Pointcut("execution(public * *(..)) && @annotation(idempotent)")
-    public void anyIdempotentOperation(Idempotent idempotent) {
     }
 }
 

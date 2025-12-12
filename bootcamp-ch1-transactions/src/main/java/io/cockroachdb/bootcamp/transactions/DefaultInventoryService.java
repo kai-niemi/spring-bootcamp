@@ -7,26 +7,26 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
-import io.cockroachdb.bootcamp.annotation.ServiceFacade;
-
-@ServiceFacade
-public class InventoryServiceFacade implements InventoryService {
+@Service
+public class DefaultInventoryService implements InventoryService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public boolean verifyProductInventory(UUID id, BigDecimal price, int quantity) {
-        // Were slow, but always successful
         try {
+            // Were slow, but always successful
             long delay = ThreadLocalRandom.current().nextLong(1000, 5000);
             logger.info("Validating product id=%s, price=%s, qty=%d, delay=%d"
                     .formatted(id, price, quantity, delay));
             TimeUnit.MILLISECONDS.sleep(delay);
             logger.info("Validated product id=%s, price=%s, qty=%d - all good ٩(^‿^)۶"
                     .formatted(id, price, quantity));
+            return true;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            return false;
         }
-        return true;
     }
 }

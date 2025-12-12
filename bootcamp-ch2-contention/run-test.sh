@@ -4,9 +4,11 @@ db_url="jdbc:postgresql://localhost:26257/bootcamp?sslmode=disable"
 db_user=root
 db_password=cockroach
 
+spring_profile="default,verbose"
 #spring_profile="default,verbose,rc"
 
-echo "Note: You also need to have the 'rc' spring profile enabled for ReadCommittedIsolationTest."
+echo ""
+echo "Note: You need to add the 'rc' spring profile for ReadCommittedIsolationTest to succeed."
 echo "Current profiles are: $spring_profile"
 echo ""
 

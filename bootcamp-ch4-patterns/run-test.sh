@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#db_url="jdbc:postgresql://localhost:26257/bootcamp?sslmode=disable"
-#db_user=root
-#db_password=cockroach
+db_url="jdbc:postgresql://localhost:26257/bootcamp?sslmode=disable"
+db_user=root
+db_password=cockroach
 
 spring_profile="default,verbose"
 

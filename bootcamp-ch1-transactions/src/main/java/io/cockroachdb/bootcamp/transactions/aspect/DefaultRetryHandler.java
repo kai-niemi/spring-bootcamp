@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.aspect;
+package io.cockroachdb.bootcamp.transactions.aspect;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -35,11 +35,6 @@ public class DefaultRetryHandler implements RetryHandler {
             }
         }
         return false;
-    }
-
-    @Override
-    public void setEnableRetry(boolean enableRetry) {
-        this.enabled = enableRetry;
     }
 
     @Override

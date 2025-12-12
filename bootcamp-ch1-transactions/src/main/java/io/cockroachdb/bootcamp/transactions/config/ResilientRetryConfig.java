@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.config;
+package io.cockroachdb.bootcamp.transactions.config;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
@@ -13,8 +13,8 @@ import io.cockroachdb.bootcamp.aspect.TransientExceptionClassifier;
 @Configuration
 @EnableResilientMethods(proxyTargetClass = true, order = AdvisorOrder.TRANSACTION_BEFORE_ADVISOR)
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-@Profile("spring-retry")
-public class SpringRetryConfig {
+@Profile("!aspect-retry")
+public class ResilientRetryConfig {
     @Bean
     public TransientExceptionClassifier exceptionClassifier() {
         return new TransientExceptionClassifier();

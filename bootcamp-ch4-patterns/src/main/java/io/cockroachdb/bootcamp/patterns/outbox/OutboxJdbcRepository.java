@@ -14,8 +14,6 @@ import org.springframework.util.Assert;
 import jakarta.annotation.PostConstruct;
 import tools.jackson.databind.json.JsonMapper;
 
-import io.cockroachdb.bootcamp.model.PurchaseOrder;
-
 @Repository
 public class OutboxJdbcRepository implements OutboxRepository {
     private final Logger logger = LoggerFactory.getLogger(getClass());

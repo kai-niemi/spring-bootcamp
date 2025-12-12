@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.aspect;
+package io.cockroachdb.bootcamp.patterns.aspect;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -15,6 +16,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.util.Assert;
 
 import io.cockroachdb.bootcamp.annotation.Idempotent;
+import io.cockroachdb.bootcamp.aspect.AdvisorOrder;
 import io.cockroachdb.bootcamp.model.IdempotencyException;
 import io.cockroachdb.bootcamp.model.IdempotencyKeyHolder;
 import io.cockroachdb.bootcamp.model.IdempotencyToken;
@@ -33,7 +35,14 @@ public class IdempotencyAspect {
         this.idempotencyTokenRepository = idempotencyTokenRepository;
     }
 
-    @Around(value = "io.cockroachdb.bootcamp.aspect.Pointcuts.anyIdempotentOperation(idempotent)",
+    /**
+     * Pointcut expression matching all idempotent operations.
+     */
+    @Pointcut("execution(public * *(..)) && @annotation(idempotent)")
+    public void anyIdempotentOperation(Idempotent idempotent) {
+    }
+
+    @Around(value = "anyIdempotentOperation(idempotent)",
             argNames = "pjp,idempotent")
     public Object doAroundIdempotentOperation(ProceedingJoinPoint pjp, Idempotent idempotent)
             throws Throwable {

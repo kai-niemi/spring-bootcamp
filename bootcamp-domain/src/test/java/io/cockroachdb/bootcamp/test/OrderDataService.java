@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
+import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.model.Customer;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.repository.CustomerRepository;
@@ -29,7 +30,7 @@ public class OrderDataService {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @TransactionExplicit
     public void deleteAllData() {
         Assert.isTrue(TransactionSynchronizationManager.isActualTransactionActive(), "TX not active");
 
@@ -39,13 +40,13 @@ public class OrderDataService {
         customerRepository.deleteAllInBatch();
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @TransactionExplicit
     public void createProducts(int numProducts, Supplier<Product> supplier) {
         IntStream.rangeClosed(1, numProducts)
                 .forEach(value -> productRepository.save(supplier.get()));
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @TransactionExplicit
     public void createCustomers(int numCustomers, Supplier<Customer> supplier) {
         List<Customer> customers = IntStream.rangeClosed(1, numCustomers)
                 .mapToObj(value -> supplier.get())
@@ -56,7 +57,7 @@ public class OrderDataService {
         });
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    @TransactionExplicit(readOnly = true)
     public <T> T withRandomCustomersAndProducts(int customerCount, int productCount,
                                                 BiConsumerAction<List<Customer>, List<Product>, T> action) {
         List<Customer> customers = customerRepository.findAllById(
