@@ -30,6 +30,7 @@ a typical spring boot application stack.
 - [Chapter 2 :: Contention](bootcamp-ch2-contention/README.md)
 - [Chapter 3 :: Performance](bootcamp-ch3-performance/README.md)
 - [Chapter 4 :: Patterns](bootcamp-ch4-patterns/README.md)
+- [Chapter 5 :: CDC](bootcamp-ch5-cdc/README.md)
 - [Domain](bootcamp-domain/README.md)
 
 # Compatibility
@@ -50,7 +51,7 @@ Things you need to build and run the modules locally.
     - https://www.oracle.com/java/technologies/downloads/#java21
 - Git
     - https://git-scm.com/downloads/mac
-- Kafka 3.6+ (for [bootcamp-ch4-patterns](bootcamp-ch4-patterns) only)
+- Kafka 3.6+ (for [bootcamp-ch5-cdc](bootcamp-ch5-cdc) only)
     - https://kafka.apache.org/downloads
 
 ## Install the JDK
