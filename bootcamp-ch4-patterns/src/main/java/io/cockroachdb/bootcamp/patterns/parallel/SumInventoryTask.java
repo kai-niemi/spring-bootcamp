@@ -9,12 +9,12 @@ import java.util.concurrent.RecursiveTask;
 public class SumInventoryTask extends RecursiveTask<BigDecimal> {
     private final List<String> cities;
 
-    private final ProductVariationRepository productVariationRepository;
+    private final InventoryRepository inventoryRepository;
 
     public SumInventoryTask(List<String> cities,
-                            ProductVariationRepository productVariationRepository) {
+                            InventoryRepository inventoryRepository) {
         this.cities = cities;
-        this.productVariationRepository = productVariationRepository;
+        this.inventoryRepository = inventoryRepository;
     }
 
     @Override
@@ -22,12 +22,12 @@ public class SumInventoryTask extends RecursiveTask<BigDecimal> {
         BigDecimal total = BigDecimal.ZERO;
 
         if (cities.size() == 1) {
-            total = productVariationRepository.sumInventoryByCountry(cities.getFirst());
+            total = inventoryRepository.sumInventoryByCountry(cities.getFirst());
         } else {
             List<SumInventoryTask> subTasks = new ArrayList<>();
 
             cities.forEach(city -> subTasks.add(
-                    new SumInventoryTask(List.of(city), productVariationRepository)));
+                    new SumInventoryTask(List.of(city), inventoryRepository)));
 
             subTasks.forEach(ForkJoinTask::fork);
 

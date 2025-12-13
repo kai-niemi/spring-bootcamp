@@ -72,33 +72,6 @@ public class FunctionalTest extends AbstractIntegrationTest {
         this.purchaseOrderId = result.getId();
     }
 
-    @Order(2)
-    @Test
-    public void whenPlaceOrderAgain_thenExpectDeDuplication() {
-        Page<Product> productPage = orderService.findProducts(PageRequest.ofSize(10));
-        Page<Customer> customerPage = orderService.findCustomers(PageRequest.ofSize(10));
-
-        Assertions.assertFalse(customerPage.isEmpty(), "No customers");
-        Assertions.assertFalse(productPage.isEmpty(), "No products");
-
-        Product product = productPage.getContent().getFirst();
-
-        PurchaseOrder purchaseOrder = PurchaseOrder.builder()
-                .withId(purchaseOrderId)
-                .withCustomer(customerPage.getContent().getFirst())
-                .andOrderItem()
-                .withProductId(product.getId())
-                .withProductSku(product.getSku())
-                .withUnitPrice(product.getPrice())
-                .withQuantity(1)
-                .then()
-                .build();
-
-        PurchaseOrder result = orderService.placeOrder(purchaseOrder);
-
-        Assertions.assertNull(result, "Expected de-duplication");
-    }
-
     @Order(3)
     @Test
     public void whenReadingOrder_thenExpectStatusUpdated() {

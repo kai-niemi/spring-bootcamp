@@ -1,0 +1,65 @@
+package io.cockroachdb.bootcamp.aspect;
+
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.NestedExceptionUtils;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.resilience.retry.MethodRetryPredicate;
+import org.springframework.stereotype.Component;
+
+import io.cockroachdb.bootcamp.annotation.Idempotent;
+
+@Component
+public class ExceptionClassifier implements MethodRetryPredicate {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private static final String SERIALIZATION_FAILURE = "40001";
+
+    private boolean enabled = true;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public boolean shouldRetry(Method method, Throwable ex) {
+        if (!isEnabled() || ex == null) {
+            return false;
+        }
+
+        boolean transientError = false;
+
+        Throwable throwable = NestedExceptionUtils.getMostSpecificCause(ex);
+        if (throwable instanceof SQLException sqlException) {
+            if (SERIALIZATION_FAILURE.equals(sqlException.getSQLState())) {
+                transientError = true;
+            } else {
+                // Check for idempotent signal
+                Idempotent idempotent = AnnotationUtils.findAnnotation(method, Idempotent.class);
+                if (idempotent != null) {
+                    transientError = Arrays.stream(idempotent.transientSQLStates())
+                            .collect(Collectors.toSet()).contains(sqlException.getSQLState());
+                }
+            }
+
+            if (transientError) {
+                logger.warn("Transient SQL exception detected : sql state [{}], message [{}]",
+                        sqlException.getSQLState(), ex.toString());
+            }
+
+        }
+
+        logger.warn("Non-transient exception {}", ex.getClass());
+        return transientError;
+    }
+}
+

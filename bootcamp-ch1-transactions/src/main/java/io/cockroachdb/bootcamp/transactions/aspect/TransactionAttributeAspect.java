@@ -71,7 +71,7 @@ public class TransactionAttributeAspect {
         }
 
         if (!TransactionPriority.NORMAL.equals(transactionExplicit.priority())) {
-            jdbcTemplate.execute("SET TRANSACTION PRIORITY "
+            jdbcTemplate.update("SET TRANSACTION PRIORITY "
                                  + transactionExplicit.priority().name());
         } else {
             if (TransactionSynchronizationManager.hasResource(TransactionRetryAspect.RETRY_ASPECT_CALL_COUNT)) {
@@ -79,7 +79,7 @@ public class TransactionAttributeAspect {
                         .getResource(TransactionRetryAspect.RETRY_ASPECT_CALL_COUNT);
                 // Increase priority on retry
                 if (Objects.nonNull(numCalls) && numCalls > 1) {
-                    jdbcTemplate.execute("SET TRANSACTION PRIORITY "
+                    jdbcTemplate.update("SET TRANSACTION PRIORITY "
                                          + transactionExplicit.retryPriority().name());
                 }
             }
@@ -90,7 +90,7 @@ public class TransactionAttributeAspect {
         }
 
         if (transactionExplicit.readOnly()) {
-            jdbcTemplate.execute("SET transaction_read_only=true");
+            jdbcTemplate.update("SET transaction_read_only=true");
         }
 
         return pjp.proceed();

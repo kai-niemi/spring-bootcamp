@@ -126,7 +126,7 @@ public class DefaultOrderService implements OrderService {
 
     @Override
     @TransactionImplicit
-    public PurchaseOrder placeOrderWithValidation(PurchaseOrder order) throws BusinessException {
+    public PurchaseOrder placeOrderWithLongWait(PurchaseOrder order) throws BusinessException {
         AssertUtils.assertNoTransaction();
 
         // Pre-validate order item products outside of DB txn scope
@@ -137,9 +137,7 @@ public class DefaultOrderService implements OrderService {
                     orderItem.getQuantity());
         });
 
-        OrderService selfProxy = selfInvocationProvider.getObject();
-
-        return selfProxy.placeOrder(order);
+        return selfInvocationProvider.getObject().placeOrder(order);
     }
 
     @Override

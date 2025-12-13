@@ -6,13 +6,13 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.persistence.OptimisticLockException;
+import jakarta.persistence.RollbackException;
 
+import io.cockroachdb.bootcamp.aspect.ExceptionClassifier;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 import io.cockroachdb.bootcamp.model.ShipmentStatus;
 import io.cockroachdb.bootcamp.model.Simulation;
@@ -98,12 +98,14 @@ public class SerializableIsolationTest extends AbstractIsolationTest {
         Assertions.assertEquals(ShipmentStatus.confirmed, purchaseOrder.getStatus());
     }
 
+    @Autowired
+    private ExceptionClassifier exceptionClassifier;
+
     @Order(2)
     @Test
-    @Disabled
     public void givenSerializableWithoutRetries_whenReadModifyWriteConcurrently_thenExpectFailure() {
         // Disable retries momentarily
-        // TODO!
+        exceptionClassifier.setEnabled(false);
 
         CompletableFuture<?> t1 = CompletableFuture.runAsync(() -> {
             orderService.updateOrder(purchaseOrderId2,
@@ -125,7 +127,7 @@ public class SerializableIsolationTest extends AbstractIsolationTest {
         t1.join();
 
         CompletionException ex = Assertions.assertThrows(CompletionException.class, t2::join);
-        Assertions.assertInstanceOf(OptimisticLockException.class, ex.getCause());
+        Assertions.assertInstanceOf(RollbackException.class, ex.getCause());
 
         PurchaseOrder purchaseOrder = orderService.findOrderById(purchaseOrderId2).orElseThrow();
         Assertions.assertEquals(ShipmentStatus.confirmed, purchaseOrder.getStatus());

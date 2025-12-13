@@ -12,6 +12,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.util.Assert;
 
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
+import io.cockroachdb.bootcamp.annotation.TransactionImplicit;
 import io.cockroachdb.bootcamp.model.Customer;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.repository.CustomerRepository;
@@ -57,7 +58,7 @@ public class OrderDataService {
         });
     }
 
-    @TransactionExplicit(readOnly = true)
+    @TransactionImplicit
     public <T> T withRandomCustomersAndProducts(int customerCount, int productCount,
                                                 BiConsumerAction<List<Customer>, List<Product>, T> action) {
         List<Customer> customers = customerRepository.findAllById(

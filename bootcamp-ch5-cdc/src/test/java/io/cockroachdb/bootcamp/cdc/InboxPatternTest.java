@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.transactions;
+package io.cockroachdb.bootcamp.cdc;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
@@ -6,27 +6,31 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import io.cockroachdb.bootcamp.Chapter1Application;
+import io.cockroachdb.bootcamp.Chapter5Application;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
+import io.cockroachdb.bootcamp.cdc.inbox.InboxRepository;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 
-@SpringBootTest(classes = {Chapter1Application.class})
-public class TransactionLifetimeTest extends AbstractIntegrationTest {
+@SpringBootTest(classes = {Chapter5Application.class})
+public class InboxPatternTest extends AbstractIntegrationTest {
     @Autowired
-    private OrderService orderService;
+    private InboxRepository<PurchaseOrder> inboxRepository;
 
     @Order(1)
     @Test
-    public void whenPlaceOrderWithForeignServiceValidation_thenExpectShortLivedTransaction() {
-        PurchaseOrder purchaseOrder = sampleDataService.withRandomCustomersAndProducts(100, 100,
+    public void whenPlaceOneOrder_thenExpectInboxEvent() {
+        createCustomersAndProducts(10, 10);
+
+        sampleDataService.withRandomCustomersAndProducts(10, 10,
                 (customers, products) -> {
                     Assertions.assertFalse(customers.isEmpty(), "No customers");
                     Assertions.assertFalse(products.isEmpty(), "No products");
 
                     Product product = products.getFirst();
 
-                    return PurchaseOrder.builder()
+                    PurchaseOrder purchaseOrder = PurchaseOrder.builder()
+                            .withGeneratedId()
                             .withCustomer(customers.getFirst())
                             .andOrderItem()
                             .withProductId(product.getId())
@@ -35,7 +39,10 @@ public class TransactionLifetimeTest extends AbstractIntegrationTest {
                             .withQuantity(1)
                             .then()
                             .build();
+
+                    inboxRepository.writeAggregate(purchaseOrder, "purchase_order");
+
+                    return purchaseOrder;
                 });
-        orderService.placeOrderWithLongWait(purchaseOrder);
     }
 }
