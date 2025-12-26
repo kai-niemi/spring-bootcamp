@@ -16,7 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import io.cockroachdb.bootcamp.Chapter1Application;
+import io.cockroachdb.bootcamp.TransactionApplication;
 import io.cockroachdb.bootcamp.model.Customer;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
@@ -26,7 +26,7 @@ import io.cockroachdb.bootcamp.model.Simulation;
 import io.cockroachdb.bootcamp.repository.MetadataUtils;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 
-@SpringBootTest(classes = {Chapter1Application.class})
+@SpringBootTest(classes = {TransactionApplication.class})
 public class FunctionalTest extends AbstractIntegrationTest {
     @Autowired
     private DataSource dataSource;

@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import io.cockroachdb.bootcamp.Chapter3Application;
+import io.cockroachdb.bootcamp.PerformanceApplication;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 import io.cockroachdb.bootcamp.test.TestDoubles;
 
-@SpringBootTest(classes = {Chapter3Application.class})
+@SpringBootTest(classes = {PerformanceApplication.class})
 public class DataLoadTest extends AbstractIntegrationTest {
     @Test
     @Order(1)

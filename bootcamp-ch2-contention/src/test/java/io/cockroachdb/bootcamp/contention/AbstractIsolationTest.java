@@ -9,12 +9,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import io.cockroachdb.bootcamp.Chapter2Application;
+import io.cockroachdb.bootcamp.ContentionApplication;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 
-@SpringBootTest(classes = {Chapter2Application.class})
+@SpringBootTest(classes = {ContentionApplication.class})
 public abstract class AbstractIsolationTest extends AbstractIntegrationTest {
     @Autowired
     protected DataSource dataSource;

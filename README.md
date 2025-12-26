@@ -26,12 +26,17 @@ a typical spring boot application stack.
 
 # Modules
 
-- [Chapter 1 :: Transactions](bootcamp-ch1-transactions/README.md)
-- [Chapter 2 :: Contention](bootcamp-ch2-contention/README.md)
-- [Chapter 3 :: Performance](bootcamp-ch3-performance/README.md)
-- [Chapter 4 :: Patterns](bootcamp-ch4-patterns/README.md)
-- [Chapter 5 :: CDC](bootcamp-ch5-cdc/README.md)
-- [Domain](bootcamp-domain/README.md)
+- Chapter 1
+  - [Transactions](bootcamp-ch1-transactions/README.md)
+- Chapter 2
+  - [Contention](bootcamp-ch2-contention/README.md)
+- Chapter 3
+  - [Performance](bootcamp-ch3-performance/README.md)
+- Chapter 4 - Patterns
+  - [Idempotency](bootcamp-ch4-idempotency/README.md)
+  - [Parallel Queries](bootcamp-ch4-parallel/README.md)
+  - [Inbox](bootcamp-ch4-inbox/README.md)
+  - [Outbox](bootcamp-ch4-outbox/README.md)
 
 # Compatibility
 

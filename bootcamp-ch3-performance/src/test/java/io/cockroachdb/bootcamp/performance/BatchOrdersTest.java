@@ -12,14 +12,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import io.cockroachdb.bootcamp.Chapter3Application;
+import io.cockroachdb.bootcamp.PerformanceApplication;
 import io.cockroachdb.bootcamp.model.Customer;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 import io.cockroachdb.bootcamp.util.RandomData;
 
-@SpringBootTest(classes = {Chapter3Application.class})
+@SpringBootTest(classes = {PerformanceApplication.class})
 public class BatchOrdersTest extends AbstractIntegrationTest {
     @Autowired
     private OrderService orderService;

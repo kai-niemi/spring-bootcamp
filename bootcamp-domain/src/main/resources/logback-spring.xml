@@ -16,7 +16,7 @@
     </springProfile>
 
     <springProfile name="!verbose">
-        <logger name="io.cockroachdb.SQL_TRACE" level="TRACE" additivity="false">
+        <logger name="io.cockroachdb.SQL_TRACE" level="DEBUG" additivity="false">
             <appender-ref ref="CONSOLE"/>
         </logger>
     </springProfile>

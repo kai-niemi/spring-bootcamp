@@ -9,9 +9,7 @@ import java.util.stream.IntStream;
 import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +20,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import io.cockroachdb.bootcamp.Chapter2Application;
+import io.cockroachdb.bootcamp.ContentionApplication;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 
-@SpringBootTest(classes = {Chapter2Application.class})
+@SpringBootTest(classes = {ContentionApplication.class})
 public class ModifyingCteTest extends AbstractIntegrationTest {
     private static final Logger logger = LoggerFactory.getLogger(ModifyingCteTest.class);
 

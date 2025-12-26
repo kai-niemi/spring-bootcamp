@@ -1,12 +1,13 @@
 # Chapter 3 :: Performance
 
-Module for demonstrating high performance patterns
-using Spring Data JPA, plain JDBC, Spring AOP and Spring Retry.
+Module for demonstrating high performance using batching 
+and query patterns.
 
 Key topics:
 
 - Connection pooling
-- Batching Writes
+- PgJDBC multi-value insert rewrites
+- Array batch inserts
 - Historical Reads
 - Modifying common table expressions
 

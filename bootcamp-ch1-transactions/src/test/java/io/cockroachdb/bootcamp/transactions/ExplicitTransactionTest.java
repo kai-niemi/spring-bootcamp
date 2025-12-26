@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import io.cockroachdb.bootcamp.Chapter1Application;
+import io.cockroachdb.bootcamp.TransactionApplication;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 import io.cockroachdb.bootcamp.util.RandomData;
 
-@SpringBootTest(classes = {Chapter1Application.class})
+@SpringBootTest(classes = {TransactionApplication.class})
 public class ExplicitTransactionTest extends AbstractIntegrationTest {
     @Autowired
     private OrderService orderService;

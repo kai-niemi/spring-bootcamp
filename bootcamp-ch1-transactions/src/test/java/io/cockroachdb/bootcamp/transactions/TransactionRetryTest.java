@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import io.cockroachdb.bootcamp.Chapter1Application;
+import io.cockroachdb.bootcamp.TransactionApplication;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 import io.cockroachdb.bootcamp.model.ShipmentStatus;
@@ -52,7 +52,7 @@ import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
  * abort;  -- T1. There's nothing else we can do, this transaction has failed
  * </pre>
  */
-@SpringBootTest(classes = {Chapter1Application.class})
+@SpringBootTest(classes = {TransactionApplication.class})
 public class TransactionRetryTest extends AbstractIntegrationTest {
     @Autowired
     private DataSource dataSource;

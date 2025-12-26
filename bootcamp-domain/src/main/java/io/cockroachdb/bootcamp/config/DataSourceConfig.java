@@ -2,10 +2,12 @@ package io.cockroachdb.bootcamp.config;
 
 import javax.sql.DataSource;
 
+import org.flywaydb.core.Flyway;
 import org.hibernate.engine.jdbc.internal.FormatStyle;
 import org.hibernate.engine.jdbc.internal.Formatter;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.flyway.autoconfigure.FlywayMigrationStrategy;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +24,14 @@ import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 
 @Configuration
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-public class DataSourceConfig {
+public class DataSourceConfig implements FlywayMigrationStrategy {
     public static final String SQL_TRACE_LOGGER = "io.cockroachdb.SQL_TRACE";
+
+    @Override
+    public void migrate(Flyway flyway) {
+        flyway.repair();
+        flyway.migrate();
+    }
 
     @Bean
     @Primary

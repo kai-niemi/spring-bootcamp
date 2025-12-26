@@ -8,12 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import io.cockroachdb.bootcamp.Chapter1Application;
+import io.cockroachdb.bootcamp.TransactionApplication;
 import io.cockroachdb.bootcamp.model.Customer;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 
-@SpringBootTest(classes = {Chapter1Application.class})
+@SpringBootTest(classes = {TransactionApplication.class})
 public class ImplicitTransactionTest extends AbstractIntegrationTest {
     @Autowired
     private OrderService orderService;
