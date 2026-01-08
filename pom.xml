@@ -38,6 +38,7 @@
         <module>bootcamp-ch4-parallel</module>
         <module>bootcamp-ch4-inbox</module>
         <module>bootcamp-ch4-outbox</module>
+        <module>bootcamp-ch4-cache</module>
         <module>bootcamp-domain</module>
     </modules>
 
