@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>bootcamp-ch4-cache</artifactId>
+    <artifactId>bootcamp-ch3-caching</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
