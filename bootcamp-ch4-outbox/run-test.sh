@@ -1,6 +1,6 @@
 #!/bin/bash
 
-db_url="jdbc:postgresql://localhost:26257/bootcamp?sslmode=disable"
+db_url="jdbc:postgresql://localhost:26257/bootcamp?sslmode=disable&allow_unsafe_internals=true"
 db_user=root
 db_password=cockroach
 
