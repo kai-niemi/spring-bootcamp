@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.cache;
+package io.cockroachdb.bootcamp.caching;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;

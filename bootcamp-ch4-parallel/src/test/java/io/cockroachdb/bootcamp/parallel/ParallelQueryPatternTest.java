@@ -23,6 +23,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import io.cockroachdb.bootcamp.ParallelQueryApplication;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
+import io.cockroachdb.bootcamp.util.AsciiArt;
+import io.cockroachdb.bootcamp.util.ProgressMeter;
 
 @SpringBootTest(classes = {ParallelQueryApplication.class})
 public class ParallelQueryPatternTest extends AbstractIntegrationTest {
@@ -53,10 +55,15 @@ public class ParallelQueryPatternTest extends AbstractIntegrationTest {
         executionTime(() -> {
             final AtomicInteger n = new AtomicInteger();
 
+            final ProgressMeter progressMeter = new ProgressMeter()
+                    .setStartTime(Instant.now())
+                    .setTotal(COUNTRIES.size())
+                    .setLabel("Inserting %d products per country".formatted(NUM_PRODUCTS_PER_COUNTRY));
+
             COUNTRIES.forEach(country -> {
-                AsciiArt.printProgressBar(n.incrementAndGet(), COUNTRIES.size(),
-                        "Inserting %d products for country '%s'"
-                                .formatted(NUM_PRODUCTS_PER_COUNTRY, country));
+                progressMeter.setCurrent(n.incrementAndGet());
+                progressMeter.printProgressBar();
+
                 inventoryRepository.insertProducts(PRODUCT_INVENTORY,
                         country, NUM_PRODUCTS_PER_COUNTRY);
             });

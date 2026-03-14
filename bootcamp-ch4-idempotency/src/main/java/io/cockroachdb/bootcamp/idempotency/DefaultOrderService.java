@@ -8,7 +8,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
-import io.cockroachdb.bootcamp.annotation.Idempotent;
 import io.cockroachdb.bootcamp.annotation.Outbox;
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.aspect.TransientExceptionClassifier;

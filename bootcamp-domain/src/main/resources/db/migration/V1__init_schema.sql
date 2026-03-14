@@ -89,16 +89,3 @@ alter table if exists purchase_order
 -- Foreign key indexes
 create index fk_order_item_ref_product_idx on purchase_order_item (product_id);
 create index fk_order_ref_customer_idx on purchase_order (customer_id);
-
--- Idempotency keys
-
-create table if not exists idempotency_token
-(
-    id         uuid primary key not null,
-    created_at timestamptz      not null default clock_timestamp()
-);
-
-alter table idempotency_token set(
-    ttl='on',
-    ttl_expire_after = '24 hours',
-    ttl_job_cron='@daily');

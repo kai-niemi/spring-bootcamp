@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.contention.config;
+package io.cockroachdb.bootcamp.contention;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Configuration;

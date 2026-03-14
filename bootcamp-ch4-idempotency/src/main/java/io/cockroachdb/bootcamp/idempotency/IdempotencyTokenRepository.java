@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.repository;
+package io.cockroachdb.bootcamp.idempotency;
 
 import java.util.Optional;
 import java.util.UUID;

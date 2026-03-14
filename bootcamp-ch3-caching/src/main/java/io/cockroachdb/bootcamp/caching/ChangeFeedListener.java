@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.cache;
+package io.cockroachdb.bootcamp.caching;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

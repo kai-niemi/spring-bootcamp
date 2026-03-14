@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.cache;
+package io.cockroachdb.bootcamp.caching;
 
 import java.util.Objects;
 import java.util.Optional;

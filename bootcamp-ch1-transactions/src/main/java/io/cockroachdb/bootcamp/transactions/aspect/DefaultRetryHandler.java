@@ -2,16 +2,12 @@ package io.cockroachdb.bootcamp.transactions.aspect;
 
 import java.sql.SQLException;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.aspectj.lang.Signature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import io.cockroachdb.bootcamp.annotation.Idempotent;
 
 public class DefaultRetryHandler implements RetryHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -25,13 +21,6 @@ public class DefaultRetryHandler implements RetryHandler {
             // Other codes can be safe to retry if the operations performed are idempotent (UPDATE/UPSERT/DELETE).
             if ("40001".equals(sqlException.getSQLState())) {
                 return true;
-            }
-
-            // Check for idempotent signal
-            Idempotent idempotent = TransactionRetryAspect.findAnnotation(signature, Idempotent.class);
-            if (idempotent != null) {
-                return Arrays.stream(idempotent.transientSQLStates())
-                        .collect(Collectors.toSet()).contains(sqlException.getSQLState());
             }
         }
         return false;

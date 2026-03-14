@@ -15,12 +15,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
-import io.cockroachdb.bootcamp.annotation.Idempotent;
 import io.cockroachdb.bootcamp.aspect.AdvisorOrder;
 import io.cockroachdb.bootcamp.model.IdempotencyException;
 import io.cockroachdb.bootcamp.model.IdempotencyKeyHolder;
 import io.cockroachdb.bootcamp.model.IdempotencyToken;
-import io.cockroachdb.bootcamp.repository.IdempotencyTokenRepository;
 
 @Aspect
 @Order(IdempotencyAspect.PRECEDENCE)

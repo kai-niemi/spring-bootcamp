@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.performance.aspect;
+package io.cockroachdb.bootcamp.performance;
 
 import javax.sql.DataSource;
 

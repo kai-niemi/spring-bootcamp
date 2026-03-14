@@ -4,7 +4,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.resilience.annotation.Retryable;
 
-import io.cockroachdb.bootcamp.annotation.Idempotent;
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.annotation.TransactionImplicit;
 

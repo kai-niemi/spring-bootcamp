@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.cache;
+package io.cockroachdb.bootcamp.caching;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;

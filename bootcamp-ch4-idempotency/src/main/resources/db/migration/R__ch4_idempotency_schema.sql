@@ -20,3 +20,16 @@ alter table if exists product_variation
     add constraint if not exists fk_product_variation_ref_product
     foreign key (product_id)
     references product;
+
+-- Idempotency keys
+
+create table if not exists idempotency_token
+(
+    id         uuid primary key not null,
+    created_at timestamptz      not null default clock_timestamp()
+);
+
+alter table idempotency_token set(
+    ttl='on',
+    ttl_expire_after = '24 hours',
+    ttl_job_cron='@daily');
