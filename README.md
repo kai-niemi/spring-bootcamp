@@ -34,9 +34,10 @@ a typical spring boot application stack.
   - [Performance](bootcamp-ch3-performance/README.md)
 - Chapter 4 - Patterns
   - [Idempotency](bootcamp-ch4-idempotency/README.md)
-  - [Parallel Queries](bootcamp-ch4-parallel/README.md)
   - [Inbox](bootcamp-ch4-inbox/README.md)
   - [Outbox](bootcamp-ch4-outbox/README.md)
+  - [Parallel Queries](bootcamp-ch4-parallel/README.md)
+  - [Locking](bootcamp-ch4-locking/README.md)
 
 # Compatibility
 

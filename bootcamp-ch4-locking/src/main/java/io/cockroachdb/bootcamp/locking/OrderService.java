@@ -1,12 +1,13 @@
 package io.cockroachdb.bootcamp.locking;
 
-import java.util.UUID;
-
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 
-/**
- * @author Kai Niemi
- */
 public interface OrderService {
-    PurchaseOrder placeOrder(UUID idempotencyKey, PurchaseOrder order);
+    /**
+     * Place a purchase order.
+     *
+     * @param order the new order in detached state
+     * @return a copy of the order in detached state
+     */
+    PurchaseOrder placeOrder(PurchaseOrder order);
 }

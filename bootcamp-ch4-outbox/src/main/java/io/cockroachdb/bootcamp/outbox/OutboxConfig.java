@@ -1,19 +1,22 @@
-package io.cockroachdb.bootcamp.performance;
-
-import javax.sql.DataSource;
+package io.cockroachdb.bootcamp.outbox;
 
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Role;
+import org.springframework.kafka.annotation.EnableKafka;
+
+import tools.jackson.databind.SerializationFeature;
 
 @Configuration
+@EnableKafka
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-public class AspectConfig {
+public class OutboxConfig {
     @Bean
-    public FollowerReadAspect followerReadAspect(DataSource dataSource) {
-        return new FollowerReadAspect(dataSource);
+    public JsonMapperBuilderCustomizer jacksonCustomizer() {
+        return builder -> builder.enable(SerializationFeature.INDENT_OUTPUT);
     }
 }

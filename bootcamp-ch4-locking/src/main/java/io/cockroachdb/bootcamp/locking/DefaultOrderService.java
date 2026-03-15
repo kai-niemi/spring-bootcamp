@@ -1,11 +1,12 @@
 package io.cockroachdb.bootcamp.locking;
 
 import java.util.Objects;
-import java.util.UUID;
+import java.util.concurrent.Semaphore;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.aspect.TransientExceptionClassifier;
@@ -16,16 +17,18 @@ import io.cockroachdb.bootcamp.repository.OrderRepository;
 import io.cockroachdb.bootcamp.repository.ProductRepository;
 import io.cockroachdb.bootcamp.util.AssertUtils;
 
-/**
- * @author Kai Niemi
- */
 @Service
 public class DefaultOrderService implements OrderService {
+    private final Semaphore semaphore = new Semaphore(1);
+
     @Autowired
     private ProductRepository productRepository;
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private LockService lockService;
 
     @Override
     @TransactionExplicit
@@ -33,20 +36,28 @@ public class DefaultOrderService implements OrderService {
             maxRetries = 5,
             maxDelay = 15_0000,
             multiplier = 1.5)
-    public PurchaseOrder placeOrder(UUID idempotencyKey, PurchaseOrder order) {
+    public PurchaseOrder placeOrder(PurchaseOrder order) {
         AssertUtils.assertReadWriteTransaction();
 
-        // Update product inventories for each line item
-        order.getOrderItems().forEach(orderItem -> {
-            Product product = productRepository.getReferenceById(
-                    Objects.requireNonNull(orderItem.getProduct().getId()));
-            product.addInventoryQuantity(-orderItem.getQuantity());
-        });
+        LockHolder lock = lockService.acquireLock(LockContext.of("placeOrder"));
 
-        order.setStatus(ShipmentStatus.placed);
-        order.setTotalPrice(order.subTotal());
+        Assert.state(semaphore.tryAcquire(), "Unable to acquire semaphore to assert singleton execution!");
 
-        orderRepository.saveAndFlush(order); // flush to surface any constraint violations
+        try {
+            order.getOrderItems().forEach(orderItem -> {
+                Product product = productRepository.getReferenceById(
+                        Objects.requireNonNull(orderItem.getProduct().getId()));
+                product.addInventoryQuantity(-orderItem.getQuantity());
+            });
+
+            order.setStatus(ShipmentStatus.placed);
+            order.setTotalPrice(order.subTotal());
+
+            orderRepository.saveAndFlush(order);
+        } finally {
+            semaphore.release();
+            lockService.releaseLock(lock);
+        }
 
         return order;
     }
