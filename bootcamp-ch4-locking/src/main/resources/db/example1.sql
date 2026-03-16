@@ -7,4 +7,3 @@ insert into locks values ('100', 'two') on conflict (name)
 commit; --T1, unlocks T2
 commit; --T2
 select * from locks where name='100'; --T2, two
-
