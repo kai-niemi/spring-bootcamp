@@ -33,13 +33,17 @@
     <modules>
         <module>bootcamp-ch1-transactions</module>
         <module>bootcamp-ch2-contention</module>
+
         <module>bootcamp-ch3-caching</module>
-        <module>bootcamp-ch3-performance</module>
+        <module>bootcamp-ch3-batching</module>
+        <module>bootcamp-ch3-followers</module>
+
         <module>bootcamp-ch4-idempotency</module>
         <module>bootcamp-ch4-parallel</module>
         <module>bootcamp-ch4-inbox</module>
         <module>bootcamp-ch4-outbox</module>
         <module>bootcamp-ch4-locking</module>
+
         <module>bootcamp-domain</module>
     </modules>
 

@@ -26,18 +26,18 @@ a typical spring boot application stack.
 
 # Modules
 
-- Chapter 1
-  - [Transactions](bootcamp-ch1-transactions/README.md)
-- Chapter 2
-  - [Contention](bootcamp-ch2-contention/README.md)
-- Chapter 3
-  - [Performance](bootcamp-ch3-performance/README.md)
-- Chapter 4 - Patterns
-  - [Idempotency](bootcamp-ch4-idempotency/README.md)
-  - [Inbox](bootcamp-ch4-inbox/README.md)
-  - [Outbox](bootcamp-ch4-outbox/README.md)
-  - [Parallel Queries](bootcamp-ch4-parallel/README.md)
-  - [Locking](bootcamp-ch4-locking/README.md)
+| Capter           | Chapter                                             | Description                                      |
+|------------------|-----------------------------------------------------|--------------------------------------------------|
+| (1) Transactions | [Transactions](bootcamp-ch1-transactions/README.md) | Transaction management including retries         |
+| (2) Contention   | [Contention](bootcamp-ch2-contention/README.md)     | Transaction contention mitigation                |
+| (3) Performance  | [Caching](bootcamp-ch3-caching/README.md)           | Cache invalidation through CDC                   |
+| -                | [Batching](bootcamp-ch3-batching/README.md)         | Batch inserts and updates                        |
+| -                | [Followers](bootcamp-ch3-followers/README.md)       | Bounded and exact staleness reads                |
+| (4) Patterns     | [Idempotency](bootcamp-ch4-idempotency/README.md)   | Service level idempotency                        |
+| -                | [Inbox](bootcamp-ch4-inbox/README.md)               | Transactional inbox pattern through CDC          |
+| -                | [Outbox](bootcamp-ch4-outbox/README.md)             | Transactional outbox pattern through CDC         |
+| -                | [Parallel Queries](bootcamp-ch4-parallel/README.md) | Parallel query execution pattern                 |
+| -                | [Locking](bootcamp-ch4-locking/README.md)           | Locking patterns equivalent to PG advisory locks |
 
 # Compatibility
 
@@ -57,7 +57,7 @@ Things you need to build and run the modules locally.
     - https://www.oracle.com/java/technologies/downloads/#java21
 - Git
     - https://git-scm.com/downloads/mac
-- Kafka 3.6+ (for [bootcamp-ch5-cdc](bootcamp-ch5-cdc) only)
+- Kafka 3.6+
     - https://kafka.apache.org/downloads
 
 ## Install the JDK
