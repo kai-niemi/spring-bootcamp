@@ -4,12 +4,14 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Service;
 
@@ -53,12 +55,34 @@ public class JdbcLockService implements LockService {
 
         String owner = holder.getKeyAs(String.class);
 
-        return new LockHolder(owner);
+        return new LockHolder(lockContext.getName(), owner);
+    }
+
+    @Override
+    public Optional<LockHolder> tryLock(LockContext lockContext) {
+        AssertUtils.assertReadWriteTransaction();
+
+        final String hostName = hostName();
+        int rows = jdbcTemplate.update(conn -> {
+            PreparedStatement ps = conn.prepareStatement("insert into locks  (name, owner) values (?,?) "
+                                                         + "on conflict (name) do nothing");
+            ps.setString(1, lockContext.getName());
+            ps.setString(2, hostName);
+            return ps;
+        });
+
+        return rows > 0 ? Optional.of(new LockHolder(lockContext.getName(), hostName)) : Optional.empty();
     }
 
     @Override
     public void releaseLock(LockHolder lock) {
-        // No-op since lock is released when txn goes out of scope
+        // Could be a no-op with a TTL instead since the lock (write intent) is
+        // released when txn goes out of scope
+        jdbcTemplate.execute("delete from locks where name=?",
+                (PreparedStatementCallback<Boolean>) ps -> {
+                    ps.setString(1, lock.getName());
+                    return ps.execute();
+                });
     }
 
     private String hostName() {

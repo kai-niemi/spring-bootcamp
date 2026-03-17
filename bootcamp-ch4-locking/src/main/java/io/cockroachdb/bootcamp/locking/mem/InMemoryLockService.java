@@ -1,6 +1,7 @@
 package io.cockroachdb.bootcamp.locking.mem;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -26,9 +27,17 @@ public class InMemoryLockService implements LockService {
     public LockHolder acquireLock(LockContext lockContext) {
         Lock lock = locks.computeIfAbsent(lockContext.getName(), s -> new ReentrantLock());
         lock.lock();
-        return new LockHolder(lock);
+        return new LockHolder(lockContext.getName(), lock);
     }
 
+    @Override
+    public Optional<LockHolder> tryLock(LockContext lockContext) {
+        Lock lock = locks.computeIfAbsent(lockContext.getName(), s -> new ReentrantLock());
+        if (lock.tryLock()) {
+            return Optional.of(new LockHolder(lockContext.getName(), lock));
+        }
+        return Optional.empty();
+    }
 
     @Override
     public void releaseLock(LockHolder lock) {
