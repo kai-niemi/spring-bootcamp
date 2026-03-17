@@ -8,3 +8,5 @@ create table if not exists locks
     updated_at timestamptz        not null default clock_timestamp()
 );
 
+-- Optional
+-- alter table locks set(ttl='on', ttl_expire_after = '1 hours');

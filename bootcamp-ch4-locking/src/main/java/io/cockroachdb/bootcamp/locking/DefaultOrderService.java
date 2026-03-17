@@ -1,6 +1,7 @@
 package io.cockroachdb.bootcamp.locking;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.Semaphore;
 
 import org.springframework.beans.factory.annotation.Autowired;

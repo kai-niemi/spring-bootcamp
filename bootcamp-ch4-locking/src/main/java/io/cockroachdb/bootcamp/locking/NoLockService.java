@@ -1,5 +1,7 @@
 package io.cockroachdb.bootcamp.locking;
 
+import java.util.Optional;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,12 @@ import org.springframework.stereotype.Service;
 public class NoLockService implements LockService {
     @Override
     public LockHolder acquireLock(LockContext lockContext) {
-        return new LockHolder(lockContext.getName());
+        return new LockHolder(lockContext.getName(), lockContext.getName());
+    }
+
+    @Override
+    public Optional<LockHolder> tryLock(LockContext lockContext) {
+        return Optional.of(new LockHolder(lockContext.getName(), lockContext.getName()));
     }
 
     @Override

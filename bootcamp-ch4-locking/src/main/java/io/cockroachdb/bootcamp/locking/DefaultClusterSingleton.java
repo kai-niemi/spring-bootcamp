@@ -1,5 +1,6 @@
 package io.cockroachdb.bootcamp.locking;
 
+import java.util.Optional;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -38,19 +39,21 @@ public class DefaultClusterSingleton {
     @TransactionExplicit
     public void checkInventory() {
         logger.info("Checking inventory - trying to acquire lock");
-        LockHolder lock = lockService.acquireLock(LockContext.of("checkInventory"));
 
-        Assert.state(semaphore.tryAcquire(), "Unable to acquire semaphore to assert singleton execution!");
+        Optional<LockHolder> lock = lockService.tryLock(LockContext.of("checkInventory"));
+        if (lock.isPresent()) {
+            Assert.state(semaphore.tryAcquire(), "Unable to acquire semaphore to assert singleton execution!");
 
-        try {
-            logger.info("Checking inventory - this is a heavy lift!");
-            TimeUnit.SECONDS.sleep(10); // Sleep longer than scheduled interval
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } finally {
-            logger.info("Done checking inventory - releasing lock");
-            semaphore.release();
-            lockService.releaseLock(lock);
+            try {
+                logger.info("Checking inventory - this is a heavy lift!");
+                TimeUnit.SECONDS.sleep(10); // Sleep longer than scheduled interval
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } finally {
+                logger.info("Done checking inventory - releasing lock");
+                semaphore.release();
+                lockService.releaseLock(lock.get());
+            }
         }
     }
 }
