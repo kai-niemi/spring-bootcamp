@@ -4,12 +4,10 @@ Module for demonstrating transaction management patterns.
 
 Key topics:
 
-- Implicit transactions
-- Explicit transactions
-- Transaction retries using AspectJ
-- Transaction retries using Spring Resilience (since v4)
+- Implicit vs explicit transactions
+- Transaction retries using AspectJ and Spring Resilience (since v4)
 - Transaction attributes using AspectJ
-- Patterns for short-lived transactions involving unpredictable delays
+- Reducing transaction lifetime
 
 ## Running Tests
 

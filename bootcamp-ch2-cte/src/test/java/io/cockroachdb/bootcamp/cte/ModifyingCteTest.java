@@ -20,10 +20,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import io.cockroachdb.bootcamp.ContentionApplication;
+import io.cockroachdb.bootcamp.CteApplication;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 
-@SpringBootTest(classes = {ContentionApplication.class})
+@SpringBootTest(classes = {CteApplication.class})
 public class ModifyingCteTest extends AbstractIntegrationTest {
     private static final Logger logger = LoggerFactory.getLogger(ModifyingCteTest.class);
 
@@ -41,7 +41,7 @@ public class ModifyingCteTest extends AbstractIntegrationTest {
         jdbcTemplate.execute("delete from transfer_item where 1=1");
         jdbcTemplate.execute("delete from transfer where 1=1");
         jdbcTemplate.execute("delete from account where 1=1");
-        
+
         jdbcTemplate.update("""
                 insert into account (id, balance, name)
                 select '10000000-0000-0000-0000-000000000000',
@@ -56,8 +56,7 @@ public class ModifyingCteTest extends AbstractIntegrationTest {
                 """);
     }
 
-
-        @RepeatedTest(value = 10)
+    @RepeatedTest(value = 10)
 //    @Test
     public void givenExplicitTransaction_thenExpectLotsOfContentionAndTransientErrors() {
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -101,7 +100,7 @@ public class ModifyingCteTest extends AbstractIntegrationTest {
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
-        @RepeatedTest(value = 10)
+    @RepeatedTest(value = 10)
 //    @Disabled
     public void givenImplicitTransaction_thenExpectNoContentionOrTransientErrors() {
         final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);

@@ -32,7 +32,9 @@
 
     <modules>
         <module>bootcamp-ch1-transactions</module>
+
         <module>bootcamp-ch2-contention</module>
+        <module>bootcamp-ch2-cte</module>
 
         <module>bootcamp-ch3-caching</module>
         <module>bootcamp-ch3-batching</module>
