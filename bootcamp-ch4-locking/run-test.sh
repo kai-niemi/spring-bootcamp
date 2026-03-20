@@ -19,6 +19,6 @@ case "$OSTYPE" in
     ;;
 esac
 
-source ${rootdir}/../run.sh
+source ${rootdir}/../run-test.sh
 
 fn_run_test

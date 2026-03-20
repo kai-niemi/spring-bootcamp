@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -27,13 +28,15 @@ import io.cockroachdb.bootcamp.repository.MetadataUtils;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 
 @SpringBootTest(classes = {TransactionApplication.class})
-public class FunctionalTest extends AbstractIntegrationTest {
+public class OrderPlacementFunctionalTest extends AbstractIntegrationTest {
     @Autowired
     private DataSource dataSource;
 
     private UUID purchaseOrderId;
 
     @Autowired
+    @Qualifier("readWriteOrderService")
+//    @Qualifier("blindWriteOrderService")
     private OrderService orderService;
 
     @BeforeAll
@@ -130,7 +133,7 @@ public class FunctionalTest extends AbstractIntegrationTest {
     @Test
     public void givenOrderStatusPlaced_whenUpdatingToConfirmed_thenExpectNewStatus() {
         orderService.updateOrder(purchaseOrderId, ShipmentStatus.placed, ShipmentStatus.confirmed,
-                Simulation.none());
+                Simulation.instance());
 
         PurchaseOrder purchaseOrder = orderService.findOrderById(purchaseOrderId).orElseThrow();
         Assertions.assertEquals(ShipmentStatus.confirmed, purchaseOrder.getStatus());
@@ -140,7 +143,7 @@ public class FunctionalTest extends AbstractIntegrationTest {
     @Test
     public void givenOrderStatusConfirmed_whenUpdatingToDelivered_thenExpectNewStatus() {
         orderService.updateOrder(purchaseOrderId, ShipmentStatus.confirmed, ShipmentStatus.delivered,
-                Simulation.none());
+                Simulation.instance());
 
         PurchaseOrder purchaseOrder = orderService.findOrderById(purchaseOrderId).orElseThrow();
         Assertions.assertEquals(ShipmentStatus.delivered, purchaseOrder.getStatus());

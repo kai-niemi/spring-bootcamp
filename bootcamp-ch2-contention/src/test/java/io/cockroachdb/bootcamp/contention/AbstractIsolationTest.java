@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import io.cockroachdb.bootcamp.ContentionApplication;
@@ -20,6 +21,7 @@ public abstract class AbstractIsolationTest extends AbstractIntegrationTest {
     protected DataSource dataSource;
 
     @Autowired
+    @Qualifier("readWriteOrderService")
     protected OrderService orderService;
 
     protected UUID purchaseOrderId1;

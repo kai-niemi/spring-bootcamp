@@ -14,28 +14,13 @@ import jakarta.persistence.LockModeType;
  * Various simulation properties for the sake of demonstrating transaction semantics.
  */
 public class Simulation {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    public static Simulation none() {
+    public static Simulation instance() {
         return new Simulation();
     }
 
-    public static Simulation readModifyWrite() {
-        return new Simulation().setPattern(Pattern.READ_MODIFY_WRITE);
-    }
-
-    public static Simulation writeOnly() {
-        return new Simulation().setPattern(Pattern.WRITE_ONLY);
-    }
-
-    public enum Pattern {
-        READ_MODIFY_WRITE,
-        WRITE_ONLY
-    }
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Duration commitDelay = Duration.ofMillis(0);
-
-    private Pattern pattern = Pattern.READ_MODIFY_WRITE;
 
     private LockModeType lockModeType = LockModeType.NONE;
 
@@ -54,15 +39,6 @@ public class Simulation {
 
     public Simulation setLockModeType(LockModeType lockModeType) {
         this.lockModeType = lockModeType;
-        return this;
-    }
-
-    public Pattern getPattern() {
-        return pattern;
-    }
-
-    public Simulation setPattern(Pattern pattern) {
-        this.pattern = pattern;
         return this;
     }
 

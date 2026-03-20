@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import io.cockroachdb.bootcamp.TransactionApplication;
@@ -16,6 +17,7 @@ import io.cockroachdb.bootcamp.util.RandomData;
 @SpringBootTest(classes = {TransactionApplication.class})
 public class ExplicitTransactionTest extends AbstractIntegrationTest {
     @Autowired
+    @Qualifier("readWriteOrderService")
     private OrderService orderService;
 
     @BeforeAll

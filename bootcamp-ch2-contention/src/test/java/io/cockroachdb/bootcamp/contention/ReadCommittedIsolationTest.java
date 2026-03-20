@@ -104,19 +104,20 @@ public class ReadCommittedIsolationTest extends AbstractIsolationTest {
 
     @Order(1)
     @Test
-    public void givenRC_whenReadModifyWriteConcurrently_thenExpectP4LostUpdate() {
+    public void givenNoLocks_whenReadModifyWriteConcurrently_thenExpectP4LostUpdate() {
         CompletableFuture<?> t1 = CompletableFuture.runAsync(() -> {
             orderService.updateOrder(purchaseOrderId1,
                     ShipmentStatus.placed,
                     ShipmentStatus.confirmed,
-                    Simulation.readModifyWrite().setCommitDelay(Duration.ofSeconds(5)));
+                    Simulation.instance()
+                            .setCommitDelay(Duration.ofSeconds(5)));
         });
 
         CompletableFuture<?> t2 = CompletableFuture.runAsync(() -> {
             orderService.updateOrder(purchaseOrderId1,
                     ShipmentStatus.placed,
                     ShipmentStatus.cancelled,
-                    Simulation.readModifyWrite()
+                    Simulation.instance()
                             .setCommitDelay(Duration.ofSeconds(5)));
         }, CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS));
 
@@ -129,12 +130,12 @@ public class ReadCommittedIsolationTest extends AbstractIsolationTest {
 
     @Order(2)
     @Test
-    public void givenRCWithLocks_whenReadModifyWriteConcurrently_thenExpectSuccess() {
+    public void givenLocks_whenReadModifyWriteConcurrently_thenExpectSuccess() {
         CompletableFuture<?> t1 = CompletableFuture.runAsync(() -> {
             orderService.updateOrder(purchaseOrderId2,
                     ShipmentStatus.placed,
                     ShipmentStatus.confirmed,
-                    Simulation.readModifyWrite()
+                    Simulation.instance()
                             .setLockModeType(LockModeType.PESSIMISTIC_WRITE)
                             .setCommitDelay(Duration.ofSeconds(5)));
         });
@@ -143,7 +144,7 @@ public class ReadCommittedIsolationTest extends AbstractIsolationTest {
             orderService.updateOrder(purchaseOrderId2,
                     ShipmentStatus.placed,
                     ShipmentStatus.cancelled,
-                    Simulation.readModifyWrite()
+                    Simulation.instance()
                             .setLockModeType(LockModeType.PESSIMISTIC_WRITE));
         }, CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS));
 

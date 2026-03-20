@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import io.cockroachdb.bootcamp.TransactionApplication;
@@ -58,6 +59,7 @@ public class TransactionRetryTest extends AbstractIntegrationTest {
     private DataSource dataSource;
 
     @Autowired
+    @Qualifier("readWriteOrderService")
     private OrderService orderService;
 
     private UUID purchaseOrderId;
@@ -103,7 +105,7 @@ public class TransactionRetryTest extends AbstractIntegrationTest {
             orderService.updateOrder(purchaseOrderId,
                     ShipmentStatus.placed,
                     ShipmentStatus.confirmed,
-                    Simulation.readModifyWrite()
+                    Simulation.instance()
                             .setCommitDelay(Duration.ofSeconds(5))); // Lets' think for 5s before write+commit
         });
 
@@ -111,7 +113,7 @@ public class TransactionRetryTest extends AbstractIntegrationTest {
             orderService.updateOrder(purchaseOrderId,
                     ShipmentStatus.placed,
                     ShipmentStatus.cancelled,
-                    Simulation.readModifyWrite());
+                    Simulation.instance());
         }, CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS)); // Ensure T2 starts after T1 and commits before
 
         // Expect both T1 and T2 to succeed, which will not happen w/o retries

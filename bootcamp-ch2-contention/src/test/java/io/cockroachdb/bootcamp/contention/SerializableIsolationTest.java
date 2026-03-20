@@ -74,12 +74,12 @@ public class SerializableIsolationTest extends AbstractIsolationTest {
 
     @Order(1)
     @Test
-    public void givenSerializableWithRetries_whenReadModifyWriteConcurrently_thenExpectSuccess() {
+    public void givenRetries_whenReadModifyWriteConcurrently_thenExpectSuccess() {
         CompletableFuture<?> t1 = CompletableFuture.runAsync(() -> {
             orderService.updateOrder(purchaseOrderId1,
                     ShipmentStatus.placed,
                     ShipmentStatus.confirmed,
-                    Simulation.readModifyWrite()
+                    Simulation.instance()
                             .setCommitDelay(Duration.ofSeconds(5))); // Lets' think for 5s before write+commit
         });
 
@@ -87,7 +87,7 @@ public class SerializableIsolationTest extends AbstractIsolationTest {
             orderService.updateOrder(purchaseOrderId1,
                     ShipmentStatus.placed,
                     ShipmentStatus.cancelled,
-                    Simulation.readModifyWrite()
+                    Simulation.instance()
                             .setCommitDelay(Duration.ofSeconds(5))); // Let's wait here also for a predicable outcome
         }, CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS)); // Ensure T2 starts after T1
 
@@ -103,7 +103,7 @@ public class SerializableIsolationTest extends AbstractIsolationTest {
 
     @Order(2)
     @Test
-    public void givenSerializableWithoutRetries_whenReadModifyWriteConcurrently_thenExpectFailure() {
+    public void givenNoRetries_whenReadModifyWriteConcurrently_thenExpectFailure() {
         // Disable retries momentarily
         exceptionClassifier.setEnabled(false);
 
@@ -111,7 +111,7 @@ public class SerializableIsolationTest extends AbstractIsolationTest {
             orderService.updateOrder(purchaseOrderId2,
                     ShipmentStatus.placed,
                     ShipmentStatus.confirmed,
-                    Simulation.readModifyWrite()
+                    Simulation.instance()
                             .setCommitDelay(Duration.ofSeconds(5)));
         });
 
@@ -119,7 +119,7 @@ public class SerializableIsolationTest extends AbstractIsolationTest {
             orderService.updateOrder(purchaseOrderId2,
                     ShipmentStatus.placed,
                     ShipmentStatus.cancelled,
-                    Simulation.readModifyWrite()
+                    Simulation.instance()
                             .setCommitDelay(Duration.ofSeconds(5)));
         }, CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS));
 

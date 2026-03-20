@@ -1,0 +1,56 @@
+actor Request (A)
+actor Request (B)
+participant TransferService (A)
+participant TransferService (B)
+participant:database Database
+
+Request (A)->+TransferService (A): Transfer
+Request (B)->+TransferService (B): Transfer
+
+TransferService (A)->+Database: begin
+Database-->-TransferService (A):
+
+TransferService (B)->+Database: begin
+Database-->-TransferService (B):
+
+# First transaction
+TransferService (A)->+Database: Read Accounts
+Database-->-TransferService (A): Balance
+TransferService (A)->TransferService (A): Check balance
+note over TransferService (A):
+Net total is > 0, proceed
+end note
+
+# Second transaction interleaved
+TransferService (B)->+Database: Read Accounts
+Database-->-TransferService (B): Balance
+
+# First transaction
+TransferService (A)->+Database: Insert Trail
+Database-->-TransferService (A): ok
+TransferService (A)->+Database: Update Accounts
+Database-->-TransferService (A): ok
+TransferService (A)->+Database: commit
+Database-->-TransferService (A): ok
+TransferService (A)->-Request (A): ok
+
+# Second transaction
+TransferService (B)->TransferService (B): Check balance
+note over TransferService (B):
+Net total is > 0, proceed
+end note
+
+note over Database:
+Actually at this point, the previous
+read has been invalidated already,
+so proceeding with a commit would lead
+to a P4 that violates serilizability.
+end note
+
+TransferService (B)->+Database: Insert Trail
+Database-->-TransferService (B): ok
+TransferService (B)->+Database: Update Accounts
+Database-->-TransferService (B): ok
+TransferService (B)->+Database: commit
+Database-->-TransferService (B): ERROR: restart transaction: TransactionRetryWithProtoRefreshError: TransactionRetryError:
+TransferService (B)->-Request (B): FAIL, plz retry!
