@@ -31,22 +31,18 @@
     </properties>
 
     <modules>
-        <module>bootcamp-ch1-transactions</module>
-
-        <module>bootcamp-ch2-contention</module>
-        <module>bootcamp-ch2-cte</module>
-
-        <module>bootcamp-ch3-caching</module>
-        <module>bootcamp-ch3-batching</module>
-        <module>bootcamp-ch3-followers</module>
-
-        <module>bootcamp-ch4-idempotency</module>
-        <module>bootcamp-ch4-parallel</module>
-        <module>bootcamp-ch4-inbox</module>
-        <module>bootcamp-ch4-outbox</module>
-        <module>bootcamp-ch4-locking</module>
-
-        <module>bootcamp-domain</module>
+        <module>spring-bootcamp-ch1-transactions</module>
+        <module>spring-bootcamp-ch2-contention</module>
+        <module>spring-bootcamp-ch2-cte</module>
+        <module>spring-bootcamp-ch3-caching</module>
+        <module>spring-bootcamp-ch3-batching</module>
+        <module>spring-bootcamp-ch3-followers</module>
+        <module>spring-bootcamp-ch4-idempotency</module>
+        <module>spring-bootcamp-ch4-parallel</module>
+        <module>spring-bootcamp-ch4-inbox</module>
+        <module>spring-bootcamp-ch4-outbox</module>
+        <module>spring-bootcamp-ch4-locking</module>
+        <module>spring-bootcamp-domain</module>
     </modules>
 
     <dependencyManagement>
