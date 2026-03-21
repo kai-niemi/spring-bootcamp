@@ -37,9 +37,9 @@ public class FollowerReadTest extends AbstractIntegrationTest {
     @Order(0)
     @Test
     public void whenStartingTest_thenBuildCatalogIfNeeded() {
-        createCustomersAndProducts(100, 100);
+        createCatalog(100, 100);
 
-        sampleDataService.withRandomCustomersAndProducts(100, 100,
+        dataService.withRandomCustomersAndProducts(100, 100,
                 (customers, products) -> {
                     Assertions.assertFalse(customers.isEmpty(), "No customers");
                     Assertions.assertFalse(products.isEmpty(), "No products");

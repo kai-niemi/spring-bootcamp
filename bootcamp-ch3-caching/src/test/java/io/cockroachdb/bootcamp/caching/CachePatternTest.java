@@ -38,7 +38,7 @@ public class CachePatternTest extends AbstractIntegrationTest {
 
     @BeforeAll
     public void beforeAll() {
-        createCustomersAndProducts(10, 10);
+        createCatalog(10, 10);
     }
 
     @Order(1)

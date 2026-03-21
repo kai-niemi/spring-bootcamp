@@ -104,7 +104,7 @@ public class ReadCommittedIsolationTest extends AbstractIsolationTest {
 
     @Order(1)
     @Test
-    public void givenNoLocks_whenReadModifyWriteConcurrently_thenExpectP4LostUpdate() {
+    public void givenNoLockingRead_whenReadModifyWriteConcurrently_thenExpectP4LostUpdate() {
         CompletableFuture<?> t1 = CompletableFuture.runAsync(() -> {
             orderService.updateOrder(purchaseOrderId1,
                     ShipmentStatus.placed,
@@ -130,7 +130,7 @@ public class ReadCommittedIsolationTest extends AbstractIsolationTest {
 
     @Order(2)
     @Test
-    public void givenLocks_whenReadModifyWriteConcurrently_thenExpectSuccess() {
+    public void givenLockingRead_whenReadModifyWriteConcurrently_thenExpectSuccess() {
         CompletableFuture<?> t1 = CompletableFuture.runAsync(() -> {
             orderService.updateOrder(purchaseOrderId2,
                     ShipmentStatus.placed,

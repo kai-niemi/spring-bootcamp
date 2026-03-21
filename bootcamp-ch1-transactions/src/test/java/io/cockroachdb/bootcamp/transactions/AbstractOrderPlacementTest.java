@@ -11,11 +11,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+
+import jakarta.persistence.LockModeType;
 
 import io.cockroachdb.bootcamp.TransactionApplication;
 import io.cockroachdb.bootcamp.model.Customer;
@@ -28,30 +29,27 @@ import io.cockroachdb.bootcamp.repository.MetadataUtils;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 
 @SpringBootTest(classes = {TransactionApplication.class})
-public class OrderPlacementFunctionalTest extends AbstractIntegrationTest {
+public abstract class AbstractOrderPlacementTest extends AbstractIntegrationTest {
     @Autowired
     private DataSource dataSource;
 
     private UUID purchaseOrderId;
 
-    @Autowired
-    @Qualifier("readWriteOrderService")
-//    @Qualifier("blindWriteOrderService")
-    private OrderService orderService;
+    protected abstract OrderService orderService();
 
     @BeforeAll
     public void beforeAll() {
         String isolation = MetadataUtils.databaseIsolation(dataSource);
         Assertions.assertEquals("SERIALIZABLE", isolation.toUpperCase());
 
-        createCustomersAndProducts(10, 10);
+        createCatalog(10, 10);
     }
 
     @Order(1)
     @Test
     public void whenPlaceOrder_thenExpectSuccess() {
-        Page<Product> productPage = orderService.findProducts(PageRequest.ofSize(10));
-        Page<Customer> customerPage = orderService.findCustomers(PageRequest.ofSize(10));
+        Page<Product> productPage = orderService().findProducts(PageRequest.ofSize(10));
+        Page<Customer> customerPage = orderService().findCustomers(PageRequest.ofSize(10));
 
         Assertions.assertFalse(customerPage.isEmpty(), "No customers");
         Assertions.assertFalse(productPage.isEmpty(), "No products");
@@ -68,7 +66,7 @@ public class OrderPlacementFunctionalTest extends AbstractIntegrationTest {
                 .then()
                 .build();
 
-        PurchaseOrder result = orderService.placeOrder(purchaseOrder);
+        PurchaseOrder result = orderService().placeOrder(purchaseOrder);
 
         Assertions.assertNotNull(result, "Expected detached entity");
 
@@ -78,7 +76,7 @@ public class OrderPlacementFunctionalTest extends AbstractIntegrationTest {
     @Order(3)
     @Test
     public void whenReadingOrder_thenExpectStatusUpdated() {
-        Page<PurchaseOrder> orderPage = orderService.findOrders(PageRequest.ofSize(10));
+        Page<PurchaseOrder> orderPage = orderService().findOrders(PageRequest.ofSize(10));
         Assertions.assertEquals(1, orderPage.getTotalElements());
 
         PurchaseOrder purchaseOrder = orderPage.getContent().getFirst();
@@ -88,7 +86,7 @@ public class OrderPlacementFunctionalTest extends AbstractIntegrationTest {
     @Order(4)
     @Test
     public void whenReadingOrderLineProduct_thenExpectInventoryUpdated() {
-        PurchaseOrder purchaseOrder = orderService.findOrderDetailById(purchaseOrderId).orElseThrow();
+        PurchaseOrder purchaseOrder = orderService().findOrderDetailById(purchaseOrderId).orElseThrow();
 
         List<PurchaseOrderItem> items = purchaseOrder.getOrderItems();
         Assertions.assertEquals(1, items.size());
@@ -105,8 +103,8 @@ public class OrderPlacementFunctionalTest extends AbstractIntegrationTest {
     @Order(5)
     @Test
     public void givenZeroInventory_whenPlaceOneOrder_thenExpectFailure() {
-        Page<Product> productPage = orderService.findProducts(PageRequest.ofSize(10));
-        Page<Customer> customerPage = orderService.findCustomers(PageRequest.ofSize(10));
+        Page<Product> productPage = orderService().findProducts(PageRequest.ofSize(10));
+        Page<Customer> customerPage = orderService().findCustomers(PageRequest.ofSize(10));
 
         Assertions.assertFalse(customerPage.isEmpty(), "No customers");
         Assertions.assertFalse(productPage.isEmpty(), "No products");
@@ -124,7 +122,7 @@ public class OrderPlacementFunctionalTest extends AbstractIntegrationTest {
                 .build();
 
         BusinessException ex = Assertions.assertThrows(BusinessException.class, () -> {
-            orderService.placeOrder(purchaseOrder);
+            orderService().placeOrder(purchaseOrder);
         });
         Assertions.assertInstanceOf(DataIntegrityViolationException.class, ex.getCause());
     }
@@ -132,27 +130,28 @@ public class OrderPlacementFunctionalTest extends AbstractIntegrationTest {
     @Order(6)
     @Test
     public void givenOrderStatusPlaced_whenUpdatingToConfirmed_thenExpectNewStatus() {
-        orderService.updateOrder(purchaseOrderId, ShipmentStatus.placed, ShipmentStatus.confirmed,
-                Simulation.instance());
+        orderService().updateOrder(purchaseOrderId, ShipmentStatus.placed, ShipmentStatus.confirmed,
+                Simulation.instance()
+                        .setLockModeType(LockModeType.PESSIMISTIC_WRITE));
 
-        PurchaseOrder purchaseOrder = orderService.findOrderById(purchaseOrderId).orElseThrow();
+        PurchaseOrder purchaseOrder = orderService().findOrderById(purchaseOrderId).orElseThrow();
         Assertions.assertEquals(ShipmentStatus.confirmed, purchaseOrder.getStatus());
     }
 
     @Order(7)
     @Test
     public void givenOrderStatusConfirmed_whenUpdatingToDelivered_thenExpectNewStatus() {
-        orderService.updateOrder(purchaseOrderId, ShipmentStatus.confirmed, ShipmentStatus.delivered,
-                Simulation.instance());
+        orderService().updateOrder(purchaseOrderId, ShipmentStatus.confirmed, ShipmentStatus.delivered,
+                Simulation.instance().setLockModeType(LockModeType.PESSIMISTIC_WRITE));
 
-        PurchaseOrder purchaseOrder = orderService.findOrderById(purchaseOrderId).orElseThrow();
+        PurchaseOrder purchaseOrder = orderService().findOrderById(purchaseOrderId).orElseThrow();
         Assertions.assertEquals(ShipmentStatus.delivered, purchaseOrder.getStatus());
     }
 
     @Order(8)
     @Test
     public void givenQueryTransformation_whenListingAllOrderDetails_thenExpectJoinHints() {
-        orderService.findOrderDetails().forEach(this::print);
+        orderService().findOrderDetails().forEach(this::print);
     }
 
     private void print(PurchaseOrder order) {

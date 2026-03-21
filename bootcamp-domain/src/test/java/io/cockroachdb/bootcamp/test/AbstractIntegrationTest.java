@@ -20,17 +20,16 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
         TransactionalTestExecutionListener.class,
 })
 @Tag("integration-test")
-//@ActiveProfiles({"dev", "default"})
 public abstract class AbstractIntegrationTest {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    protected OrderDataService sampleDataService;
+    protected DataService dataService;
 
-    protected void createCustomersAndProducts(int customerCount, int productCount) {
-        sampleDataService.deleteAllData();
-        sampleDataService.createCustomers(customerCount, TestDoubles::newCustomer);
-        sampleDataService.createProducts(productCount, TestDoubles::newProduct);
+    protected void createCatalog(int customerCount, int productCount) {
+        dataService.deleteAllData();
+        dataService.createCustomers(customerCount, TestDoubles::newCustomer);
+        dataService.createProducts(productCount, TestDoubles::newProduct);
     }
 }
 

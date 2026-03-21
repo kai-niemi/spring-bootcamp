@@ -19,9 +19,9 @@ public class InboxPatternTest extends AbstractIntegrationTest {
     @Order(1)
     @Test
     public void whenPlaceOneOrder_thenExpectInboxEvent() {
-        createCustomersAndProducts(10, 10);
+        createCatalog(10, 10);
 
-        sampleDataService.withRandomCustomersAndProducts(10, 10,
+        dataService.withRandomCustomersAndProducts(10, 10,
                 (customers, products) -> {
                     Assertions.assertFalse(customers.isEmpty(), "No customers");
                     Assertions.assertFalse(products.isEmpty(), "No products");

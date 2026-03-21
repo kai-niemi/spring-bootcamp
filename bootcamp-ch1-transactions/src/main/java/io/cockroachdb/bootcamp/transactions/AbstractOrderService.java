@@ -14,9 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.annotation.TransactionImplicit;
 import io.cockroachdb.bootcamp.model.Customer;
@@ -40,9 +37,6 @@ public abstract class AbstractOrderService implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
-
-    @Autowired
-    private InventoryService inventoryService;
 
     @Autowired
     private ObjectProvider<OrderService> selfInvocationProvider;
@@ -119,12 +113,11 @@ public abstract class AbstractOrderService implements OrderService {
         AssertUtils.assertNoTransaction();
 
         // Pre-validate order item products outside of DB txn scope
-        order.getOrderItems().forEach(orderItem -> {
-            UUID productId = Objects.requireNonNull(orderItem.getProduct().getId());
-            inventoryService.verifyProductInventory(productId,
-                    orderItem.getUnitPrice(),
-                    orderItem.getQuantity());
-        });
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         return selfInvocationProvider.getObject().placeOrder(order);
     }

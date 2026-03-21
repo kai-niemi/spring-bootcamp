@@ -60,7 +60,7 @@ public class DataSourceConfig implements FlywayMigrationStrategy {
                 return formatterHighlight.format(formatterBasic.format(query));
             }
         };
-        creator.setMultiline(true);
+        creator.setMultiline(false);
 
         SLF4JQueryLoggingListener listener = new SLF4JQueryLoggingListener();
         listener.setQueryLogEntryCreator(creator);

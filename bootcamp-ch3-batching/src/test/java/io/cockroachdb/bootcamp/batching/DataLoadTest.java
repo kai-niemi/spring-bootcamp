@@ -13,18 +13,18 @@ public class DataLoadTest extends AbstractIntegrationTest {
     @Test
     @Order(1)
     public void deleteTestDta() {
-        sampleDataService.deleteAllData();
+        dataService.deleteAllData();
     }
 
     @Test
     @Order(2)
     public void createCustomers() {
-        sampleDataService.createCustomers(256, TestDoubles::newCustomer);
+        dataService.createCustomers(256, TestDoubles::newCustomer);
     }
 
     @Test
     @Order(3)
     public void createProducts() {
-        sampleDataService.createProducts(256, TestDoubles::newProduct);
+        dataService.createProducts(256, TestDoubles::newProduct);
     }
 }

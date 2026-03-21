@@ -22,7 +22,7 @@ public class ImplicitTransactionTest extends AbstractIntegrationTest {
 
     @BeforeAll
     public void beforeAll() {
-        createCustomersAndProducts(100, 100);
+        createCatalog(100, 100);
     }
 
     @Order(1)

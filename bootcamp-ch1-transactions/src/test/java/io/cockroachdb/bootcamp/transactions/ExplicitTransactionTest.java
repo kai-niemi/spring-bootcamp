@@ -22,13 +22,13 @@ public class ExplicitTransactionTest extends AbstractIntegrationTest {
 
     @BeforeAll
     public void beforeAll() {
-        createCustomersAndProducts(10, 5);
+        createCatalog(10, 5);
     }
 
     @Order(1)
     @Test
     public void whenPlacingTenOrders_thenExpectSuccess() {
-        sampleDataService.withRandomCustomersAndProducts(
+        dataService.withRandomCustomersAndProducts(
                 10, 5, (customers, products) -> {
                     IntStream.rangeClosed(1, 10).forEach(x -> {
                         PurchaseOrder.Builder orderBuilder = PurchaseOrder

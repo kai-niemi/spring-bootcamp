@@ -21,13 +21,13 @@ public class IdempotencyPatternTest extends AbstractIntegrationTest {
 
     @BeforeAll
     public void beforeAll() {
-        createCustomersAndProducts(10, 10);
+        createCatalog(10, 10);
     }
 
     @Order(1)
     @Test
     public void whenPlaceOrder_thenExpectSuccess() {
-        this.purchaseOrder = sampleDataService.withRandomCustomersAndProducts(10, 10,
+        this.purchaseOrder = dataService.withRandomCustomersAndProducts(10, 10,
                 (customers, products) -> {
                     Assertions.assertFalse(customers.isEmpty(), "No customers");
                     Assertions.assertFalse(products.isEmpty(), "No products");
@@ -49,7 +49,7 @@ public class IdempotencyPatternTest extends AbstractIntegrationTest {
     @Order(2)
     @Test
     public void whenPlaceOrderAgain_thenExpectDeDuplication() {
-        PurchaseOrder secondOrder = sampleDataService.withRandomCustomersAndProducts(10, 10,
+        PurchaseOrder secondOrder = dataService.withRandomCustomersAndProducts(10, 10,
                 (customers, products) -> {
                     Assertions.assertFalse(customers.isEmpty(), "No customers");
                     Assertions.assertFalse(products.isEmpty(), "No products");

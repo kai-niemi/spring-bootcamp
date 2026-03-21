@@ -26,13 +26,13 @@ public abstract class LockingPatternTest extends AbstractIntegrationTest {
 
     @BeforeAll
     public void beforeAll() {
-        createCustomersAndProducts(100, 5);
+        createCatalog(100, 5);
     }
 
     @Order(1)
     @Test
     public void whenPlacingOrdersConcurrently_thenForceExecuteAsClusterSingleton() {
-        sampleDataService.withRandomCustomersAndProducts(
+        dataService.withRandomCustomersAndProducts(
                 100, 5, (customers, products) -> {
                     List<CompletableFuture<?>> futures = new ArrayList<>();
 

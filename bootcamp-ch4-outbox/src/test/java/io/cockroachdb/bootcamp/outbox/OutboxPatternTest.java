@@ -21,9 +21,9 @@ public class OutboxPatternTest extends AbstractIntegrationTest {
     @Order(1)
     @Test
     public void whenPlaceOneOrder_thenExpectOutboxEvent() {
-        createCustomersAndProducts(10, 10);
+        createCatalog(10, 10);
 
-        PurchaseOrder po = sampleDataService.withRandomCustomersAndProducts(10, 10,
+        PurchaseOrder po = dataService.withRandomCustomersAndProducts(10, 10,
                 (customers, products) -> {
                     Assertions.assertFalse(customers.isEmpty(), "No customers");
                     Assertions.assertFalse(products.isEmpty(), "No products");

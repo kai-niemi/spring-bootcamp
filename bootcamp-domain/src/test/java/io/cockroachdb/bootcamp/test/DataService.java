@@ -6,8 +6,6 @@ import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
@@ -21,7 +19,7 @@ import io.cockroachdb.bootcamp.repository.ProductRepository;
 import io.cockroachdb.bootcamp.util.StreamUtils;
 
 @Service
-public class OrderDataService {
+public class DataService {
     @Autowired
     private ProductRepository productRepository;
 

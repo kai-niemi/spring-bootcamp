@@ -8,7 +8,6 @@ import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
@@ -39,8 +38,7 @@ public class ReadWriteOrderService extends AbstractOrderService {
         TypedQuery<PurchaseOrder> query = entityManager.createQuery(
                 "select po from PurchaseOrder po where po.id=:id", PurchaseOrder.class);
         query.setParameter("id", id);
-        query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
-//            query.setLockMode(simulation.getLockModeType());
+        query.setLockMode(simulation.getLockModeType());
 
         // SELECT .. FOR UPDATE
         PurchaseOrder purchaseOrder = query.getSingleResult();

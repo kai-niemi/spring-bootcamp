@@ -54,7 +54,7 @@ import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
  * </pre>
  */
 @SpringBootTest(classes = {TransactionApplication.class})
-public class TransactionRetryTest extends AbstractIntegrationTest {
+public abstract class AbstractRetryTest extends AbstractIntegrationTest {
     @Autowired
     private DataSource dataSource;
 
@@ -66,12 +66,12 @@ public class TransactionRetryTest extends AbstractIntegrationTest {
 
     @BeforeAll
     public void beforeAll() {
-        createCustomersAndProducts(10, 10);
+        createCatalog(10, 10);
         this.purchaseOrderId = placeOrder();
     }
 
     private UUID placeOrder() {
-        return sampleDataService.withRandomCustomersAndProducts(100, 100,
+        return dataService.withRandomCustomersAndProducts(100, 100,
                 (customers, products) -> {
                     Assertions.assertFalse(customers.isEmpty(), "No customers");
                     Assertions.assertFalse(products.isEmpty(), "No products");
@@ -92,21 +92,20 @@ public class TransactionRetryTest extends AbstractIntegrationTest {
                 });
     }
 
-    @Order(0)
+    @Order(1)
     @Test
     public void whenCheckingIsolationLevel_thenExpectSerializable() {
         Assertions.assertEquals("SERIALIZABLE", MetadataUtils.databaseIsolation(dataSource).toUpperCase());
     }
 
-    @Order(1)
+    @Order(2)
     @Test
-    public void givenSerializable_whenReadWriteConflict_thenExpectRetries() {
+    public void whenReadWriteConflict_thenExpectRetries() {
         CompletableFuture<?> t1 = CompletableFuture.runAsync(() -> {
             orderService.updateOrder(purchaseOrderId,
                     ShipmentStatus.placed,
                     ShipmentStatus.confirmed,
-                    Simulation.instance()
-                            .setCommitDelay(Duration.ofSeconds(5))); // Lets' think for 5s before write+commit
+                    Simulation.instance().setCommitDelay(Duration.ofSeconds(5))); // Lets' think for 5s before write+commit
         });
 
         CompletableFuture<?> t2 = CompletableFuture.runAsync(() -> {

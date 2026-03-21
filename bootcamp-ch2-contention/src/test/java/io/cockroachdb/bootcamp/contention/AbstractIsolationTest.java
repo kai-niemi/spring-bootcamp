@@ -30,14 +30,14 @@ public abstract class AbstractIsolationTest extends AbstractIntegrationTest {
 
     @BeforeAll
     public void beforeAll() {
-        createCustomersAndProducts(10, 10);
+        createCatalog(10, 10);
 
         this.purchaseOrderId1 = placeOrder();
         this.purchaseOrderId2 = placeOrder();
     }
 
     private UUID placeOrder() {
-        return sampleDataService.withRandomCustomersAndProducts(100, 100,
+        return dataService.withRandomCustomersAndProducts(100, 100,
                 (customers, products) -> {
                     Assertions.assertFalse(customers.isEmpty(), "No customers");
                     Assertions.assertFalse(products.isEmpty(), "No products");

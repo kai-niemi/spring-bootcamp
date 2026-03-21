@@ -1,6 +1,7 @@
 package io.cockroachdb.bootcamp.transactions;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,15 @@ public class TransactionLifetimeTest extends AbstractIntegrationTest {
     @Qualifier("readWriteOrderService")
     private OrderService orderService;
 
+    @BeforeAll
+    public void beforeAll() {
+        createCatalog(10, 10);
+    }
+
     @Order(1)
     @Test
     public void whenPlaceOrderWithForeignServiceValidation_thenExpectShortLivedTransaction() {
-        PurchaseOrder purchaseOrder = sampleDataService.withRandomCustomersAndProducts(100, 100,
+        PurchaseOrder purchaseOrder = dataService.withRandomCustomersAndProducts(100, 100,
                 (customers, products) -> {
                     Assertions.assertFalse(customers.isEmpty(), "No customers");
                     Assertions.assertFalse(products.isEmpty(), "No products");
@@ -38,6 +44,7 @@ public class TransactionLifetimeTest extends AbstractIntegrationTest {
                             .then()
                             .build();
                 });
-        orderService.placeOrderWithLongWait(purchaseOrder);
+        purchaseOrder = orderService.placeOrderWithLongWait(purchaseOrder);
+        Assertions.assertNotNull(purchaseOrder);
     }
 }

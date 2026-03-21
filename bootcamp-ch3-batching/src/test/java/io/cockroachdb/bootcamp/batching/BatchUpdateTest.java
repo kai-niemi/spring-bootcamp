@@ -65,7 +65,7 @@ public class BatchUpdateTest extends AbstractIntegrationTest {
     @Order(1)
     @Test
     public void whenStartingTest_thenRebuildCatalog() {
-        createCustomersAndProducts(0, numProducts);
+        createCatalog(0, numProducts);
     }
 
     @Order(2)
