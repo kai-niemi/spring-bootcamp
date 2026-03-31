@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>spring-bootcamp-ch2-cte</artifactId>
+    <artifactId>spring-bootcamp-followers</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

@@ -27,19 +27,19 @@ this [blog](https://blog.cloudneutral.se/).
 
 # Modules
 
-| Capter           | Chapter                                                    | Description                                              |
-|------------------|------------------------------------------------------------|----------------------------------------------------------|
-| (1) Transactions | [Transactions](spring-bootcamp-ch1-transactions/README.md) | Transaction management including retries, timeouts, etc. |
-| (2) Contention   | [Contention](spring-bootcamp-ch2-contention/README.md)     | Transaction contention mitigation                        |
-| -                | [CTE](spring-bootcamp-ch2-cte/README.md)                   | Modifying common table expressions                       |
-| (3) Performance  | [Caching](spring-bootcamp-ch3-caching/README.md)           | Cache invalidation through CDC                           |
-| -                | [Batching](spring-bootcamp-ch3-batching/README.md)         | Batch inserts, updates and upserts                       |
-| -                | [Followers](spring-bootcamp-ch3-followers/README.md)       | Bounded and exact staleness reads                        |
-| (4) Patterns     | [Idempotency](spring-bootcamp-ch4-idempotency/README.md)   | Service level idempotency by de-duplication              |
-| -                | [Inbox](spring-bootcamp-ch4-inbox/README.md)               | Transactional inbox pattern through CDC                  |
-| -                | [Outbox](spring-bootcamp-ch4-outbox/README.md)             | Transactional outbox pattern through CDC                 |
-| -                | [Parallel Queries](spring-bootcamp-ch4-parallel/README.md) | Parallel fork/join query execution pattern               |
-| -                | [Locking](spring-bootcamp-ch4-locking/README.md)           | Locking patterns equivalent to PG advisory locks         |
+| Category     | Chapter                                                    | Description                                              |
+|--------------|------------------------------------------------------------|----------------------------------------------------------|
+| Transactions | [Transactions](spring-bootcamp-ch1-transactions/README.md) | Transaction management including retries, timeouts, etc. |
+| Contention   | [Contention](spring-bootcamp-ch2-contention/README.md)     | Transaction contention mitigation                        |
+| -            | [CTE](spring-bootcamp-ch2-cte/README.md)                   | Modifying common table expressions                       |
+| Performance  | [Caching](spring-bootcamp-ch3-caching/README.md)           | Cache invalidation through CDC                           |
+| -            | [Batching](spring-bootcamp-ch3-batching/README.md)         | Batch inserts, updates and upserts                       |
+| -            | [Followers](spring-bootcamp-ch3-followers/README.md)       | Bounded and exact staleness reads                        |
+| Patterns     | [Idempotency](spring-bootcamp-ch4-idempotency/README.md)   | Service level idempotency by de-duplication              |
+| -            | [Inbox](spring-bootcamp-ch4-inbox/README.md)               | Transactional inbox pattern through CDC                  |
+| -            | [Outbox](spring-bootcamp-ch4-outbox/README.md)             | Transactional outbox pattern through CDC                 |
+| -            | [Parallel Queries](spring-bootcamp-ch4-parallel/README.md) | Parallel fork/join query execution pattern               |
+| -            | [Locking](spring-bootcamp-ch4-locking/README.md)           | Locking patterns equivalent to PG advisory locks         |
 
 # Compatibility
 

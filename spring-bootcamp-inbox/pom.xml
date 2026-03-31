@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>spring-bootcamp-ch4-locking</artifactId>
+    <artifactId>spring-bootcamp-inbox</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -27,6 +27,19 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-jackson2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-kafka</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -37,26 +50,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>shedlock</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>net.javacrumbs.shedlock</groupId>
-                    <artifactId>shedlock-spring</artifactId>
-                    <version>7.6.0</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.javacrumbs.shedlock</groupId>
-                    <artifactId>shedlock-provider-jdbc-template</artifactId>
-                    <version>7.6.0</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>
 

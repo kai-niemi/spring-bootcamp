@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.3</version>
+        <version>4.0.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -31,17 +31,17 @@
     </properties>
 
     <modules>
-        <module>spring-bootcamp-ch1-transactions</module>
-        <module>spring-bootcamp-ch2-contention</module>
-        <module>spring-bootcamp-ch2-cte</module>
-        <module>spring-bootcamp-ch3-caching</module>
-        <module>spring-bootcamp-ch3-batching</module>
-        <module>spring-bootcamp-ch3-followers</module>
-        <module>spring-bootcamp-ch4-idempotency</module>
-        <module>spring-bootcamp-ch4-parallel</module>
-        <module>spring-bootcamp-ch4-inbox</module>
-        <module>spring-bootcamp-ch4-outbox</module>
-        <module>spring-bootcamp-ch4-locking</module>
+        <module>spring-bootcamp-transactions</module>
+        <module>spring-bootcamp-contention</module>
+        <module>spring-bootcamp-cte</module>
+        <module>spring-bootcamp-caching</module>
+        <module>spring-bootcamp-batching</module>
+        <module>spring-bootcamp-followers</module>
+        <module>spring-bootcamp-idempotency</module>
+        <module>spring-bootcamp-parallel</module>
+        <module>spring-bootcamp-inbox</module>
+        <module>spring-bootcamp-outbox</module>
+        <module>spring-bootcamp-locking</module>
         <module>spring-bootcamp-domain</module>
     </modules>
 

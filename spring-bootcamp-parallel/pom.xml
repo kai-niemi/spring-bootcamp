@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>spring-bootcamp-ch4-idempotency</artifactId>
+    <artifactId>spring-bootcamp-parallel</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
