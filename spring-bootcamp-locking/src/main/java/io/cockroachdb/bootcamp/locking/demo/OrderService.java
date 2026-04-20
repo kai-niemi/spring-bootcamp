@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.locking;
+package io.cockroachdb.bootcamp.locking.demo;
 
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 

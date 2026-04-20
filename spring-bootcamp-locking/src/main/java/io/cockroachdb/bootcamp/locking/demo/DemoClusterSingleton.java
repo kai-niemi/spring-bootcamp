@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.locking;
+package io.cockroachdb.bootcamp.locking.demo;
 
 import java.util.Optional;
 import java.util.concurrent.Semaphore;
@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
+import io.cockroachdb.bootcamp.locking.LockContext;
+import io.cockroachdb.bootcamp.locking.LockHolder;
+import io.cockroachdb.bootcamp.locking.LockService;
 
 /**
  * A sample cluster singleton execution service, depending on lock service implementation.
@@ -26,7 +29,7 @@ import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
  */
 @Service
 @Profile(value = "!shedlock") // shedlock works differently so its got a separate implementation
-public class DefaultClusterSingleton {
+public class DemoClusterSingleton {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Semaphore semaphore = new Semaphore(1);

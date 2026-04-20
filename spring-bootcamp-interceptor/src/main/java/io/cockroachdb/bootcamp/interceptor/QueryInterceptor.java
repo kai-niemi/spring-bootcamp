@@ -1,4 +1,4 @@
-package io.cockroachdb.bootcamp.hibernate;
+package io.cockroachdb.bootcamp.interceptor;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;

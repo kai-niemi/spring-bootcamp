@@ -42,6 +42,7 @@
         <module>spring-bootcamp-inbox</module>
         <module>spring-bootcamp-outbox</module>
         <module>spring-bootcamp-locking</module>
+        <module>spring-bootcamp-interceptor</module>
         <module>spring-bootcamp-domain</module>
     </modules>
 

@@ -21,7 +21,7 @@ public class LockingApplication implements ApplicationRunner {
     private String profiles;
 
     @Override
-    public void run(ApplicationArguments args)  {
+    public void run(ApplicationArguments args) {
         logger.info("Started lock demo app with profiles: %s".formatted(profiles));
     }
 

@@ -12,12 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.task.AsyncTaskExecutor;
 
 import io.cockroachdb.bootcamp.LockingApplication;
+import io.cockroachdb.bootcamp.locking.demo.OrderService;
 import io.cockroachdb.bootcamp.model.Customer;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 import io.cockroachdb.bootcamp.test.AbstractIntegrationTest;
 
 @SpringBootTest(classes = {LockingApplication.class})
-public abstract class LockingPatternTest extends AbstractIntegrationTest {
+public abstract class AbstractLockTest extends AbstractIntegrationTest {
     @Autowired
     private OrderService orderService;
 

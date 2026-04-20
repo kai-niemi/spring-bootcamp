@@ -31,8 +31,6 @@ spring:
           use_minimal_puts: true
           use_second_level_cache: false
         use_sql_comments: false
-        session_factory:
-          statement_inspector: io.cockroachdb.bootcamp.hibernate.QueryInterceptor
   #############################
   datasource:
     url: jdbc:postgresql://localhost:26257/bootcamp?sslmode=disable&allow_unsafe_internals=true

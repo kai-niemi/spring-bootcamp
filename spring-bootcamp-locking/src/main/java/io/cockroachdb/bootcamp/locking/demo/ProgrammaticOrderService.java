@@ -1,7 +1,6 @@
-package io.cockroachdb.bootcamp.locking;
+package io.cockroachdb.bootcamp.locking.demo;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.Semaphore;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,9 @@ import org.springframework.util.Assert;
 
 import io.cockroachdb.bootcamp.annotation.TransactionExplicit;
 import io.cockroachdb.bootcamp.aspect.TransientExceptionClassifier;
+import io.cockroachdb.bootcamp.locking.LockContext;
+import io.cockroachdb.bootcamp.locking.LockHolder;
+import io.cockroachdb.bootcamp.locking.LockService;
 import io.cockroachdb.bootcamp.model.Product;
 import io.cockroachdb.bootcamp.model.PurchaseOrder;
 import io.cockroachdb.bootcamp.model.ShipmentStatus;
@@ -18,8 +20,8 @@ import io.cockroachdb.bootcamp.repository.OrderRepository;
 import io.cockroachdb.bootcamp.repository.ProductRepository;
 import io.cockroachdb.bootcamp.util.AssertUtils;
 
-@Service
-public class DefaultOrderService implements OrderService {
+//@Service
+public class ProgrammaticOrderService implements OrderService {
     private final Semaphore semaphore = new Semaphore(1);
 
     @Autowired

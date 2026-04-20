@@ -1,0 +1,5 @@
+jpa:
+  properties:
+    hibernate:
+      session_factory:
+        statement_inspector: io.cockroachdb.bootcamp.hibernate.QueryInterceptor

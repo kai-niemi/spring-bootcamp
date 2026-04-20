@@ -1,5 +1,6 @@
-package io.cockroachdb.bootcamp.locking;
+package io.cockroachdb.bootcamp;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -12,11 +13,19 @@ import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
+import io.cockroachdb.bootcamp.locking.LockAspect;
+import io.cockroachdb.bootcamp.locking.LockService;
+
 @Configuration
 @EnableScheduling
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableAsync
-public class AsyncConfig implements SchedulingConfigurer {
+public class DemoConfig implements SchedulingConfigurer {
+    @Bean
+    public LockAspect lockAspect(@Autowired LockService lockService) {
+        return new LockAspect(lockService);
+    }
+
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
